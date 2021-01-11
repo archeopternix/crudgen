@@ -47,5 +47,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	createCmd.Flags().StringVarP(&Application, "application", "a", "", "Name of the application that will be generated")
+	createCmd.MarkFlagRequired("application")
 	createCmd.Flags().StringVarP(&Path, "path", "p", "", "Target path where the application will be generated")
+	createCmd.MarkFlagRequired("path")
 }
