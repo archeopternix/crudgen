@@ -28,6 +28,9 @@ var createCmd = &cobra.Command{
 	Long: `generates the basic logic to show a generic landing page, a config 
 	file containing basic information, echo router with a default route '/', `,
 	Run: func(cmd *cobra.Command, args []string) {
+		for _, arg := range args {
+			fmt.Println(arg)
+		}
 		fmt.Println("create called")
 	},
 }
