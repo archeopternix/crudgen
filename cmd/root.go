@@ -27,6 +27,9 @@ import (
 
 var cfgFile string
 
+var Application string
+var Path string
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "crudgen",
