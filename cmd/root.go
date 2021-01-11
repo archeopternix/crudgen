@@ -29,6 +29,7 @@ var cfgFile string
 
 var Application string
 var Path string
+var Port int
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
