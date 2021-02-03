@@ -18,6 +18,8 @@ package cmd
 import (
 	"fmt"
 
+	model "github.com/archeopternix/crudgen/crudgen/model"
+
 	"github.com/spf13/cobra"
 )
 
@@ -31,6 +33,32 @@ var createCmd = &cobra.Command{
 		for _, arg := range args {
 			fmt.Println(arg)
 		}
+		// create sample data
+		e, err := model.App.NewEntity("Sample1", model.Regular)
+		if err != nil {
+			log.Println(err)
+		}
+
+		f1 := model.Field{Name: "ID", FieldType: model.Integer, Required: true}
+		e.AddField(&f1)
+		f2 := model.Field{Name: "Name", FieldType: model.String}
+		e.AddField(&f2)
+
+		_, err = model.App.NewEntity("Sample2", model.Regular)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = model.App.NewRelation("Sample1", "Sample2", model.One2many)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ds, er := model.NewYAMLDatastore("abc.yaml")
+		if er != nil {
+			log.Fatal(er)
+		}
+		ds.SaveAllData(model.App)
 		fmt.Println("create called")
 	},
 }
