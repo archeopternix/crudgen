@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
+Copyright © 2021 NAME HERE <EMAIL ADDRESS>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,30 +21,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configureCmd represents the configure command
-var configureCmd = &cobra.Command{
-	Use:   "configure",
-	Short: "CRUDgen configuration of the application and setup of the core components",
-	Long: `CRUDgen will be installed, configuration files will be 
-created with a default data set, 
-activation and configuration of frontend and 
-backend connectors are done by this command
-	`,
+// entityCmd represents the entity command
+var entityCmd = &cobra.Command{
+	Use:   "entity",
+	Short: "Adds an entity to the application",
+	Long: `An entity will be added to the configuration. As default the 
+type 'entity' will be assigned to it. It is necessary to create fields and add 
+them to the entity configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("configure called")
+		fmt.Println("add entity called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(configureCmd)
+	addCmd.AddCommand(entityCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// configureCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// entityCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// configureCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	entityCmd.Flags().String("name", "", "Name of the entity to be created")
 }

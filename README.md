@@ -9,8 +9,8 @@ a full (web based) CRUD application is generated using templates 'go/template'.
 Such an application consists of 4 base components where frontends and backends 
 could be easily exchanged. It is even possible to write own frontend or backend adapters
 
-### Base:
-Interfaces and code that glues the frontend, backend and model together.
+### Core:
+Configuration, interfaces and code that glues the frontend, backend and model together.
 
 ### Models:
 crudgen is a generator that uses go/template package to generate models,
