@@ -1,5 +1,5 @@
 /*
-Copyright © 2020
+Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,18 +27,16 @@ import (
 
 var cfgFile string
 
-var Application string
-var Path string
-var Port int
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "crudgen",
-	Short: "Generator for a web based CRUD application with echo frontend and pluggable storage backends",
-	Long: `crudgen is a generator that uses go/template package to generate 
-		the base logic, structs (objects), and webpages/routers for echo V4 framework 
-		(https://echo.labstack.com/).
-		Repositories (databases) for storing application data can be choosen via cli commands`,
+	Short: "A brief description of your application",
+	Long: `A longer description that spans multiple lines and likely contains
+examples and usage of using your application. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

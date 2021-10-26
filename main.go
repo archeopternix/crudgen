@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Andreas Eisner <ae@kouri.cc>
+Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/archeopternix/crudgen/cmd"
+import "crudgen/cmd"
 
 func main() {
 	cmd.Execute()
