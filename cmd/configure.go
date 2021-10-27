@@ -24,12 +24,11 @@ import (
 // configureCmd represents the configure command
 var configureCmd = &cobra.Command{
 	Use:   "configure",
-	Short: "CRUDgen configuration of the application and setup of the core components",
-	Long: `CRUDgen will be installed, configuration files will be 
-created with a default data set, 
-activation and configuration of frontend and 
-backend connectors are done by this command
-	`,
+	Short: "configure the view and repository components of the application",
+	Long: `Configuration and selection of view and repository components.
+
+You can select which view (frontend from pure HTML to Rest API) or which 
+repository (from SQL database to in-memory for testing purpose).	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("configure called")
 	},

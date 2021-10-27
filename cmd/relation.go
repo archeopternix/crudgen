@@ -24,8 +24,8 @@ import (
 // relationCmd represents the relation command
 var relationCmd = &cobra.Command{
 	Use:   "relation",
-	Short: "Adds an entity relation to the application",
-	Long: `A relation will be added to the configuration. You can choose as 
+	Short: "adds an entity relation to the application",
+	Long: `a relation will be added to the configuration. You can choose as 
 relation type onetomany. As a flag source and target have to be submitted as 
 the both entitites that are in a relation to each other`,
 	Run: func(cmd *cobra.Command, args []string) {

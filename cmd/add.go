@@ -24,8 +24,8 @@ import (
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Adds entities and relations to the application model",
-	Long:  `Adds empty entities or relations (entity to entity) to the application AST model.`,
+	Short: "adds entities and relations to the application model",
+	Long:  `adds empty entities or relations (entity to entity) to the application AST model.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("add called")
 	},

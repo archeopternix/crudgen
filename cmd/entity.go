@@ -24,8 +24,8 @@ import (
 // entityCmd represents the entity command
 var entityCmd = &cobra.Command{
 	Use:   "entity",
-	Short: "Adds an entity to the application",
-	Long: `An entity will be added to the configuration. As default the 
+	Short: "adds an entity to the application",
+	Long: `an entity will be added to the configuration. As default the 
 type 'entity' will be assigned to it. It is necessary to create fields and add 
 them to the entity configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
