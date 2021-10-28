@@ -67,13 +67,13 @@ the both entitites that are in a relation to each other
       -t  --target string   Name of the target (e.g. ..n) entity
           --type string     Type of relation (1..n = onetomany) (default "onetomany")
 
-### Adding a text field (fieldtext)
+### Adding a text field (text)
 Adds a text field to an entity where you can set if the field is --required 
 or used as a --label in drop down select boxes and define the maximum length. 
 Length=-1 means no restriction
 
     Usage:
-      crudgen add fieldtext [flags]
+      crudgen add text [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
@@ -83,12 +83,12 @@ Length=-1 means no restriction
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
 
-### Adding a longtext field (fieldlongtext)
+### Adding a longtext field (longtext)
 Adds a longtext field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction
 
     Usage:
-      crudgen add fieldlongtext [flags]
+      crudgen add longtext [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
@@ -97,12 +97,12 @@ and define the maximum length. Length=-1 means no restriction
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
 
-### Adding a password field (fieldpassword)
+### Adding a password field (password)
 Adds a password field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction
 
     Usage:
-      crudgen add fieldpassword [flags]
+      crudgen add password [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
@@ -111,12 +111,12 @@ and define the maximum length. Length=-1 means no restriction
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
 
-### Adding a phone field (fieldphone)
+### Adding a phone field (phone)
 Adds a phone field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction
 
     Usage:
-      crudgen add fieldphone [flags]
+      crudgen add phone [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
@@ -126,12 +126,12 @@ and define the maximum length. Length=-1 means no restriction
           --required        Content for field is required to be accepted (to activate: --required)
 
 
-### Adding a e-mail field (fieldemail)
+### Adding a e-mail field (email)
 Adds a e-mail field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction
 
     Usage:
-      crudgen add fieldemail [flags]
+      crudgen add email [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
@@ -140,11 +140,11 @@ and define the maximum length. Length=-1 means no restriction
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
 
-### Adding a boolean field (fieldboolean)
+### Adding a boolean field (boolean)
 Adds a boolean (true/false) field to an entity.
 
     Usage:
-      crudgen add fieldboolean [flags]
+      crudgen add boolean [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
