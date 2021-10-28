@@ -28,7 +28,7 @@ var addfieldCmd = &cobra.Command{
 	Use:   "addfield",
 	Short: "Adds fields to existing entitites",
 	Long: `Adds fields to existing entitites. The mandatory sub-command reflects 
-the type of field that has to be added. The flag 'name' is mandatory for all subsequent commands.
+the type of field that has to be added.
 
 Possible sub-commands:
 Text, Password, Integer, Number, Boolean, Email, Tel, Longtext, Time, Lookup.`,
@@ -40,8 +40,5 @@ Text, Password, Integer, Number, Boolean, Email, Tel, Longtext, Time, Lookup.`,
 
 func init() {
 	rootCmd.AddCommand(addfieldCmd)
-	addfieldCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
-	//	addfieldCmd.Flags().StringVarP(&kind, "type", "t", "", "Type of the field to be created (Text, Password, Integer, Number, Boolean, Email, Tel, Longtext, Time, Lookup)")
-	addfieldCmd.MarkFlagRequired("name")
 
 }

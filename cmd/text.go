@@ -16,7 +16,9 @@ limitations under the License.
 package cmd
 
 import (
+	"crudgen/ast"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -24,28 +26,44 @@ import (
 // textCmd represents the text command
 var textCmd = &cobra.Command{
 	Use:   "text",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Creates a text field",
+	Long: `A text field is created. Optional flags are
+`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("text called")
+		addTextField()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(textCmd)
+	addfieldCmd.AddCommand(textCmd)
+	textCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
+	textCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
+	textCmd.MarkFlagRequired("name")
+	textCmd.MarkFlagRequired("entity")
+	textCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
+	textCmd.Flags().BoolVarP(&label, "label", "", false, "This field will be used as a label for drop down fields (to activate: --label)")
 
-	// Here you will define your flags and configuration settings.
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// textCmd.PersistentFlags().String("foo", "", "A help for foo")
+func addTextField() {
+	var a ast.Application
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// textCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	f := ast.Field{Name: name, Kind: "Text", Required: required, IsLabel: label}
+
+	if err := a.AddFieldToEntity(entity, f); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fmt.Println("New field '", name, "' added to entity '", entity, "'")
 }

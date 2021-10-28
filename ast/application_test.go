@@ -119,5 +119,4 @@ func TestAddField(t *testing.T) {
 	if err := a.AddFieldToEntity("Alpha", Field{Name: "Textfield", Kind: "Text"}); err != nil {
 		t.Errorf("Creation of Field 'Textfield' failed: %v", err)
 	}
-
 }

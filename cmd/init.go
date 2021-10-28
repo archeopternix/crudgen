@@ -40,7 +40,9 @@ Configuration files will be created with default data set.`,
 }
 
 // Package local variables used to capture commands
-var kind, name, pkgname, source, target, typ string
+var entity, kind, name, pkgname, source, target, typ string
+var required, label bool
+var length int
 
 const (
 	configpath     = "./config/"

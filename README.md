@@ -72,7 +72,8 @@ the both entitites that are in a relation to each other
 Add fields to existing entitites. The sub-command reflects the type of field which 
 has to be added. There are some flags that have to be applied to all kind of fields
 
-addfield text
+### addfield text
+Adds a text field
 
 add longtextfield
 

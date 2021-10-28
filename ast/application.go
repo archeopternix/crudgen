@@ -93,8 +93,24 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	if _, ok := a.Entities[entity]; !ok {
 		return fmt.Errorf("ERROR: Entity does not exist: '%v'", entity)
 	}
+
+	e := a.Entities[entity]
+	if _, ok := e.Fields[field.Name]; ok {
+		return fmt.Errorf("ERROR: Field already exists: '%v'", field.Name)
+	}
+
+	if field.IsLabel && (!field.Required) {
+		return fmt.Errorf("ERROR: Only required fields can be labels")
+	}
+
+	if field.Length < -1 {
+		field.Length = -1
+	}
+
 	switch field.Kind {
 	case "Text":
+		fmt.Println(field)
+
 	case "Password":
 	case "Integer":
 	case "Number":
@@ -108,6 +124,8 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	default:
 		return fmt.Errorf("ERROR: Missing or unknown field type: '%v'", field.Kind)
 	}
+
+	a.Entities[entity].Fields[field.Name] = field
 
 	return nil
 }
