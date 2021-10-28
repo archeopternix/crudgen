@@ -85,16 +85,14 @@ Length=-1 means no restriction
 
 ### Adding a longtext field (fieldlongtext)
 Adds a longtext field to an entity where you can set if the field is --required 
-or used as a --label in drop down select boxes and define the maximum length. 
-Length=-1 means no restriction
+and define the maximum length. Length=-1 means no restriction
 
     Usage:
-      crudgen add fieldpassword [flags]
+      crudgen add fieldlongtext [flags]
 
     Flags:
       -e, --entity string   Entity where the field will be added
       -h, --help            help for fieldtext
-          --label           This field will be used as a label for drop down fields (to activate: --label)
       -l, --length int      Maximum text length (-1 .. means no restriction) (default -1)
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
@@ -109,10 +107,27 @@ and define the maximum length. Length=-1 means no restriction
     Flags:
       -e, --entity string   Entity where the field will be added
       -h, --help            help for fieldtext
-          --label           This field will be used as a label for drop down fields (to activate: --label)
       -l, --length int      Maximum text length (-1 .. means no restriction) (default -1)
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
+
+### Adding a phone field (fieldphone)
+Adds a phone field to an entity where you can set if the field is --required 
+and define the maximum length. Length=-1 means no restriction
+
+    Usage:
+      crudgen add fieldphone [flags]
+
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+      -l, --length int      Maximum text length (-1 .. means no restriction) (default -1)
+      -n, --name string     Name of the field
+          --required        Content for field is required to be accepted (to activate: --required)
+
+
+add emailfield
+
 
 add integerfield
 
@@ -122,9 +137,7 @@ add lookupfield
 
 add boolfield
 
-add phonefield
 
-add emailfield
 
 add timefield
 
