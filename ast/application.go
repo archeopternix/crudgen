@@ -88,6 +88,11 @@ func (a *Application) AddRelation(rel Relation) error {
 	return nil
 }
 
+func AddFieldToEntity(entity string, field Field) error {
+
+	return nil
+}
+
 // SaveToYAML saves the Application definition to a YAML file
 func (a Application) SaveToYAML(filepath string) error {
 	file, err := os.Create(filepath)

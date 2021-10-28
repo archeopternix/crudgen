@@ -68,6 +68,31 @@ the both entitites that are in a relation to each other
           --type string     Type of relation (1..n = onetomany) (default "onetomany")
 
 
+### Addfield
+Add fields to existing entitites. The sub-command reflects the type of field which 
+has to be added. There are some flags that have to be applied to all kind of fields
+
+addfield text
+
+add longtextfield
+
+add passwordfield
+
+add integerfield
+
+add numberfield
+
+add lookupfield
+
+add boolfield
+
+add phonefield
+
+add emailfield
+
+add timefield
+
+
 ### configure
 - configure view / repository -kind/ -help
 

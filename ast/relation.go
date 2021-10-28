@@ -18,9 +18,11 @@ limitations under the License.
 */
 package ast
 
-// Entity relates to a database table and holds the field definitions
-type Entity struct {
-	Name   string  `yaml:"name"`
-	Fields []Field `yaml:"fields"`
-	Kind   string  `yaml:"type,omitempty"` // 0..default, 1..Lookup 2..Many2Many
+// Relation holds the definition for parent - child relationships.
+// When parsed by Application additional fields will be added to the child and parent
+// entities
+type Relation struct {
+	Source string `json:"source"`
+	Target string `json:"target"`
+	Kind   string `json:"kind"` // "one2many", "many2many"
 }
