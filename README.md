@@ -36,7 +36,7 @@ Configuration files will be created with default data set.
     Flags:
        -h, --help              help for init
        -n, --name string       Name of the application
-          --pkg-name string   Package name of the root package (e.g. github.com/abc)
+           --pkg-name string   Package name of the root package (e.g. github.com/abc)
 
 ### add entity
 An entity will be added to the configuration. The default type is a
@@ -45,13 +45,13 @@ them to the entity configuration.
 
 A special entity type is 'lookup' which could populate drop down fields.
 
-`Usage:`
-`  crudgen add entity [flags]`
+    Usage:
+      crudgen add entity [flags]
 
-`Flags:`
-`  -h, --help          help for entity`
-`  -n, --name string   Name of the entity`
-`  -t, --type string   Type of the entity to be created (default or lookup (default "default")`
+    Flags:
+      -h, --help          help for entity
+      -n, --name string   Name of the entity
+      -t, --type string   Type of the entity to be created (default or lookup (default "default")
 
 ### configure
 - configure view / repository -kind/ -help
