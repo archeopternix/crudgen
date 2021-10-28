@@ -39,14 +39,12 @@ the both entitites that are in a relation to each other`,
 	},
 }
 
-var source, target, typ string
-
 func init() {
 	addCmd.AddCommand(relationCmd)
 
 	relationCmd.Flags().StringVarP(&source, "source", "s", "", "Name of the source (e.g. 1..) entity ")
 	relationCmd.Flags().StringVarP(&target, "target", "t", "", "Name of the target (e.g. ..n) entity ")
-	relationCmd.Flags().StringVar(&typ, "type", "onetomany", "Type of relation (e.g 1..n = onetomany)")
+	relationCmd.Flags().StringVar(&kind, "type", "onetomany", "Type of relation (e.g 1..n = onetomany)")
 	relationCmd.MarkFlagRequired("source")
 	relationCmd.MarkFlagRequired("target")
 
@@ -60,7 +58,7 @@ func addRelation() {
 		os.Exit(1)
 	}
 
-	if err := a.AddRelation(ast.Relation{Source: source, Target: target, Kind: typ}); err != nil {
+	if err := a.AddRelation(ast.Relation{Source: source, Target: target, Kind: kind}); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

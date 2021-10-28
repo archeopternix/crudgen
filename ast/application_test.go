@@ -96,3 +96,28 @@ func TestAddRelation(t *testing.T) {
 		t.Error("Adding Relation failed")
 	}
 }
+
+func TestAddField(t *testing.T) {
+	a := NewApplication("TestApp")
+
+	// Add a new entity
+	if err := a.AddEntity(Entity{Name: "Alpha"}); err != nil {
+		t.Errorf("Creation of entity 'Alpha'  failed: %v", err)
+	}
+
+	// unknow entity
+	if err := a.AddFieldToEntity("Gamma", Field{Name: "Textfield"}); err == nil {
+		t.Errorf("Creation of Field 'Textfield' not failed: %v", err)
+	}
+
+	// unknown/missing type
+	if err := a.AddFieldToEntity("Alpha", Field{Name: "Textfield"}); err == nil {
+		t.Errorf("Creation of Field 'Textfield' not failed: %v", err)
+	}
+
+	// successful
+	if err := a.AddFieldToEntity("Alpha", Field{Name: "Textfield", Kind: "Text"}); err != nil {
+		t.Errorf("Creation of Field 'Textfield' failed: %v", err)
+	}
+
+}

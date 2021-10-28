@@ -39,11 +39,9 @@ A special entity type is 'lookup' which could populate drop down fields.`,
 	},
 }
 
-var ename, kind string
-
 func init() {
 	addCmd.AddCommand(entityCmd)
-	entityCmd.Flags().StringVarP(&ename, "name", "n", "", "Name of the entity")
+	entityCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the entity")
 	entityCmd.Flags().StringVarP(&kind, "type", "t", "default", "Type of the entity to be created (default or lookup")
 	entityCmd.MarkFlagRequired("name")
 }
@@ -55,7 +53,7 @@ func addEntity() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	if err := a.AddEntity(ast.Entity{Name: ename, Kind: kind}); err != nil {
+	if err := a.AddEntity(ast.Entity{Name: name, Kind: kind}); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -65,5 +63,5 @@ func addEntity() {
 		os.Exit(1)
 	}
 
-	fmt.Println("New entity '", ename, "' added to config file ")
+	fmt.Println("New entity '", name, "' added to config file ")
 }

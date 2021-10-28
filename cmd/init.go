@@ -39,7 +39,8 @@ Configuration files will be created with default data set.`,
 	},
 }
 
-var name, pkgname string
+// Package local variables used to capture commands
+var kind, name, pkgname, source, target, typ string
 
 const (
 	configpath     = "./config/"

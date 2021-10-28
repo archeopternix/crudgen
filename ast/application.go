@@ -88,7 +88,26 @@ func (a *Application) AddRelation(rel Relation) error {
 	return nil
 }
 
-func AddFieldToEntity(entity string, field Field) error {
+func (a *Application) AddFieldToEntity(entity string, field Field) error {
+	// check if entity exists
+	if _, ok := a.Entities[entity]; !ok {
+		return fmt.Errorf("ERROR: Entity does not exist: '%v'", entity)
+	}
+	switch field.Kind {
+	case "Text":
+	case "Password":
+	case "Integer":
+	case "Number":
+	case "Boolean":
+	case "Email":
+	case "Tel":
+	case "Longtext":
+	case "Time":
+	case "Lookup":
+
+	default:
+		return fmt.Errorf("ERROR: Missing or unknown field type: '%v'", field.Kind)
+	}
 
 	return nil
 }
