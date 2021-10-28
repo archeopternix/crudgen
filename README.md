@@ -68,9 +68,21 @@ the both entitites that are in a relation to each other
           --type string     Type of relation (1..n = onetomany) (default "onetomany")
 
 
-### Addfield(s)
-Add fields to existing entitites. The sub-command reflects the type of field which 
-has to be added. There are some flags that have to be applied to all kind of fields
+### Add text field
+Adds a text field to an entity where you can set if the field is --required 
+or used as a --label in drop down select boxes and define the maximum length. 
+Length=-1 means no restriction
+
+    Usage:
+      crudgen add fieldtext [flags]
+
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+          --label           This field will be used as a label for drop down fields (to activate: --label)
+      -l, --length int      Maximum text length (-1 .. means no restriction) (default -1)
+      -n, --name string     Name of the field
+          --required        Content for field is required to be accepted (to activate: --required)
 
 ### addfield text
 Adds a text field
