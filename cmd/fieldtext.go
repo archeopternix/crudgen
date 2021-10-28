@@ -28,12 +28,13 @@ import (
 // fieldtextCmd represents the fieldtext command
 var fieldtextCmd = &cobra.Command{
 	Use:   "fieldtext",
-	Short: "Adds a text field to an entity",
+	Short: "adds a text field to an entity",
 	Long: `Adds a text field to an entity where you can set if the field is --required 
-or used as a --label in drop down select boxes
+or used as a --label in drop down select boxes and define the maximum length. 
+Length=-1 means no restriction
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("fieldtext called")
+		addFieldText()
 	},
 }
 
@@ -68,5 +69,5 @@ func addFieldText() {
 		os.Exit(1)
 	}
 
-	fmt.Println("New field '", name, "' added to entity '", entity, "'")
+	fmt.Printf("New text field '%v' added to entity '%v'\n", name, entity)
 }

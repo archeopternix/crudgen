@@ -20,7 +20,7 @@ package ast
 
 // Entity relates to a database table and holds the field definitions
 type Entity struct {
-	Name   string           `yaml:"name"`
-	Fields map[string]Field `yaml:"fields"`
-	Kind   string           `yaml:"type,omitempty"` // 0..default, 1..Lookup 2..Many2Many
+	Name   string  `yaml:"name"`
+	Fields []Field `yaml:"fields"`
+	Kind   string  `yaml:"type,omitempty"` // 0..default, 1..Lookup 2..Many2Many
 }

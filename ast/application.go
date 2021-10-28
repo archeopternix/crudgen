@@ -94,9 +94,10 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 		return fmt.Errorf("ERROR: Entity does not exist: '%v'", entity)
 	}
 
-	e := a.Entities[entity]
-	if _, ok := e.Fields[field.Name]; ok {
-		return fmt.Errorf("ERROR: Field already exists: '%v'", field.Name)
+	for _, val := range a.Entities[entity].Fields {
+		if val.Name == field.Name {
+			return fmt.Errorf("ERROR: Field  '%v' already exists in entity '%v'", field.Name, entity)
+		}
 	}
 
 	if field.IsLabel && (!field.Required) {
@@ -109,8 +110,6 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 
 	switch field.Kind {
 	case "Text":
-		fmt.Println(field)
-
 	case "Password":
 	case "Integer":
 	case "Number":
@@ -125,7 +124,9 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 		return fmt.Errorf("ERROR: Missing or unknown field type: '%v'", field.Kind)
 	}
 
-	a.Entities[entity].Fields[field.Name] = field
+	e := a.Entities[entity]
+	e.Fields = append(e.Fields, field)
+	a.Entities[entity] = e
 
 	return nil
 }
