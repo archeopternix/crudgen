@@ -29,9 +29,9 @@ import (
 // Application holds all information and configuration for the AST and consists
 // of Entitites, Relations and the Configuration necessary for template generation
 type Application struct {
-	Name      string            `yaml:"name"`
-	Entities  map[string]Entity `yaml:"entities"`  //Entity
-	Relations []string          `yaml:"relations"` //Relation
+	Name      string              `yaml:"name"`
+	Entities  map[string]Entity   `yaml:"entities"`  //Entity
+	Relations map[string]Relation `yaml:"relations"` //Relation
 	Config    struct {
 		PackageName string `yaml:"packagename"`
 	}
@@ -42,7 +42,50 @@ func NewApplication(name string) *Application {
 	app := new(Application)
 	app.Name = name
 	app.Entities = make(map[string]Entity)
+	app.Relations = make(map[string]Relation)
 	return app
+}
+
+// AddEntity adds an new entity to the AST and checks if Entity with this name already exists
+// or name is too short
+func (a *Application) AddEntity(e Entity) error {
+	if len(e.Name) < 4 {
+		return fmt.Errorf("ERROR: Entity needs a unique name (min 3 characters): '%v'", e.Name)
+	}
+
+	if _, ok := a.Entities[e.Name]; ok {
+		return fmt.Errorf("ERROR: Entity already exists: '%v'", e.Name)
+	}
+
+	a.Entities[e.Name] = e
+	return nil
+}
+
+// AddRelation checks if Entities referenced are existing and adds a new Relation
+// to the AST
+func (a *Application) AddRelation(rel Relation) error {
+	if _, ok := a.Entities[rel.Source]; !ok {
+		return fmt.Errorf("ERROR: Source entity does not exists: '%v'", rel.Source)
+	}
+
+	if _, ok := a.Entities[rel.Target]; !ok {
+		return fmt.Errorf("ERROR: Target entity does not exists: '%v'", rel.Target)
+	}
+
+	switch rel.Kind {
+	case "onetomany":
+
+	default:
+		return fmt.Errorf("ERROR: Missing or unknown relation type: '%v'", rel.Kind)
+	}
+
+	name := rel.Source + "_" + rel.Target + "_" + rel.Kind
+	if _, ok := a.Relations[name]; ok {
+		return fmt.Errorf("ERROR: Relation already exists: '%v'", name)
+	}
+	a.Relations[name] = rel
+
+	return nil
 }
 
 // SaveToYAML saves the Application definition to a YAML file

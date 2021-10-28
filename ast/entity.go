@@ -24,3 +24,12 @@ type Entity struct {
 	// Fields []Field `yaml:"fields"`
 	Kind string `yaml:"type,omitempty"` // 0..Normal, 1..Lookup 2..Many2Many
 }
+
+// Relation holds the definition for parent - child relationships.
+// When parsed by Application additional fields will be added to the child and parent
+// entities
+type Relation struct {
+	Source string `json:"source"`
+	Target string `json:"target"`
+	Kind   string `json:"kind"` // "one2many", "many2many"
+}

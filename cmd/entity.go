@@ -55,18 +55,10 @@ func addEntity() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	if len(a.Name) < 1 {
-		fmt.Println("ERROR: initialize application first.'")
+	if err := a.AddEntity(ast.Entity{Name: ename, Kind: kind}); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	if _, ok := a.Entities[ename]; ok {
-		fmt.Println("ERROR: Entity already exists: '", ename, "'")
-		os.Exit(1)
-	}
-
-	a.Entities[ename] = ast.Entity{Name: ename, Kind: kind}
 
 	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
 		fmt.Println(err)

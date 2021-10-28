@@ -26,7 +26,7 @@ base logic
 ## Command line:
 Command line interface
 
-### init
+### Init
 Basic setup of the AST configuration in the target directory. 
 Configuration files will be created with default data set.
 
@@ -38,7 +38,7 @@ Configuration files will be created with default data set.
        -n, --name string       Name of the application
            --pkg-name string   Package name of the root package (e.g. github.com/abc)
 
-### add entity
+### Add entity
 An entity will be added to the configuration. The default type is a
 normal 'entity' that holds fields, it is necessary to create fields and add 
 them to the entity configuration.
@@ -52,6 +52,21 @@ A special entity type is 'lookup' which could populate drop down fields.
       -h, --help          help for entity
       -n, --name string   Name of the entity
       -t, --type string   Type of the entity to be created (default or lookup (default "default")
+
+### Add relation
+The relation will be added to the configuration. You can choose as 
+relation type (e.g.) onetomany. As a flag source and target have to be submitted as 
+the both entitites that are in a relation to each other
+
+    Usage:
+       crudgen add relation [flags]
+
+    Flags:
+      -h, --help            help for relation
+      -s  --source string   Name of the source (e.g. 1..) entity
+      -t  --target string   Name of the target (e.g. ..n) entity
+          --type string     Type of relation (1..n = onetomany) (default "onetomany")
+
 
 ### configure
 - configure view / repository -kind/ -help

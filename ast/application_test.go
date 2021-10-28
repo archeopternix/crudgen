@@ -8,7 +8,7 @@ import (
 
 const res = `name: TestApp
 entities: {}
-relations: []
+relations: {}
 config:
   packagename: github.com/archeopternix
 `
@@ -41,5 +41,58 @@ func TestYAMLReader(t *testing.T) {
 		t.Errorf("Result does not match. Name result: %v expected: TestApp", a.Name)
 	} else {
 		t.Logf("YAML matches expected result.")
+	}
+}
+
+func TestAddEntity(t *testing.T) {
+	a := NewApplication("TestApp")
+
+	// Add a new entity
+	if err := a.AddEntity(Entity{Name: "Alpha"}); err != nil {
+		t.Errorf("Creation of entity failed: %v", err)
+	}
+	if len(a.Entities) < 1 {
+		t.Error("Adding Entitiy failed")
+	}
+
+	// Add the same entity again (should fail)
+	if err := a.AddEntity(Entity{Name: "Alpha"}); err == nil {
+		t.Errorf("Creation of duplicate entity must fail")
+	}
+
+	// Add entity with too short name
+	if err := a.AddEntity(Entity{Name: "A1"}); err == nil {
+		t.Error("Creation of entity with too short nam must fail")
+	}
+}
+
+func TestAddRelation(t *testing.T) {
+	a := NewApplication("TestApp")
+
+	// Add a new entity
+	if err := a.AddEntity(Entity{Name: "Alpha"}); err != nil {
+		t.Errorf("Creation of entity 'Alpha' failed: %v", err)
+	}
+	// Add a new entity
+	if err := a.AddEntity(Entity{Name: "Beta"}); err != nil {
+		t.Errorf("Creation of entity 'Beta' failed: %v", err)
+	}
+
+	// Add a relation with unknown Entities
+	if err := a.AddRelation(Relation{Source: "Beta", Target: "Zeta", Kind: "onetomany"}); err == nil {
+		t.Errorf("Unknown targt entity has to fail")
+	}
+
+	// Add a relation with missing relation type
+	if err := a.AddRelation(Relation{Source: "Beta", Target: "Alpha"}); err == nil {
+		t.Errorf("Entity with unknown relation type has to fail")
+	}
+
+	// Add a relation
+	if err := a.AddRelation(Relation{Source: "Beta", Target: "Alpha", Kind: "onetomany"}); err != nil {
+		t.Errorf("Creation of ralation failed: %v", err)
+	}
+	if len(a.Relations) < 1 {
+		t.Error("Adding Relation failed")
 	}
 }
