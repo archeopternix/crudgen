@@ -1,11 +1,11 @@
 # CRUDgen
 Generator for a web based CRUD application/API with selectable frontends and backends. 
-CRUDgen uses an AST tree that will build up based on configuration files in YAML. 
-You will be provided with interactive shell commends that helps you building up the 
-application stack
+CRUDgen uses an AST (abstract syntax tree) that is backed up by a configuration files in YAML. 
+You will be provided with an interactive command line interface that helps you building up the 
+model which is the foundation for the code generation.
 
 ## Application
-a full (web based) CRUD application is generated using templates 'go/template'.
+A full (web based) CRUD application is generated using templates 'go/template'.
 Such an application consists of 4 base components where frontends and backends 
 could be easily exchanged. It is even possible to write own frontend or backend adapters
 
