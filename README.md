@@ -26,7 +26,7 @@ base logic
 ## Command line:
 Command line interface
 
-### Init
+### Initialisation
 Basic setup of the AST configuration in the target directory. 
 Configuration files will be created with default data set.
 
@@ -38,7 +38,7 @@ Configuration files will be created with default data set.
        -n, --name string       Name of the application
            --pkg-name string   Package name of the root package (e.g. github.com/abc)
 
-### Add entity
+### Adding an entity
 An entity will be added to the configuration. The default type is a
 normal 'entity' that holds fields, it is necessary to create fields and add 
 them to the entity configuration.
@@ -53,7 +53,7 @@ A special entity type is 'lookup' which could populate drop down fields.
       -n, --name string   Name of the entity
       -t, --type string   Type of the entity to be created (default or lookup (default "default")
 
-### Add relation
+### Adding a relation
 The relation will be added to the configuration. You can choose as 
 relation type (e.g.) onetomany. As a flag source and target have to be submitted as 
 the both entitites that are in a relation to each other
@@ -68,7 +68,7 @@ the both entitites that are in a relation to each other
           --type string     Type of relation (1..n = onetomany) (default "onetomany")
 
 
-### Add text field
+### Adding a text field (fieldtext)
 Adds a text field to an entity where you can set if the field is --required 
 or used as a --label in drop down select boxes and define the maximum length. 
 Length=-1 means no restriction
@@ -84,8 +84,6 @@ Length=-1 means no restriction
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
 
-### addfield text
-Adds a text field
 
 add longtextfield
 
