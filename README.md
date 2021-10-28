@@ -68,7 +68,7 @@ the both entitites that are in a relation to each other
           --type string     Type of relation (1..n = onetomany) (default "onetomany")
 
 
-### Addfield
+### Addfield(s)
 Add fields to existing entitites. The sub-command reflects the type of field which 
 has to be added. There are some flags that have to be applied to all kind of fields
 

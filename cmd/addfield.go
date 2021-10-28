@@ -23,11 +23,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// addCmd represents the add command
-var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "adds entities and relations to the application model",
-	Long:  `adds empty entities or relations (entity to entity) to the application AST model.`,
+// addfieldCmd represents the addfield command
+var addfieldCmd = &cobra.Command{
+	Use:   "addfield",
+	Short: "Adds fields to existing entitites",
+	Long: `Adds fields to existing entitites. The mandatory sub-command reflects 
+the type of field that has to be added. The flag 'name' is mandatory for all subsequent commands.
+
+Possible sub-commands:
+Text, Password, Integer, Number, Boolean, Email, Tel, Longtext, Time, Lookup.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 		os.Exit(0)
@@ -35,5 +39,9 @@ var addCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(addfieldCmd)
+	addfieldCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
+	//	addfieldCmd.Flags().StringVarP(&kind, "type", "t", "", "Type of the field to be created (Text, Password, Integer, Number, Boolean, Email, Tel, Longtext, Time, Lookup)")
+	addfieldCmd.MarkFlagRequired("name")
+
 }
