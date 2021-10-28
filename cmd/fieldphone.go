@@ -27,7 +27,7 @@ import (
 
 // fieldphoneCmd represents the fieldtext command
 var fieldphoneCmd = &cobra.Command{
-	Use:   "fieldphone",
+	Use:   "phone",
 	Short: "adds a phone field to an entity",
 	Long: `Adds a phone field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction

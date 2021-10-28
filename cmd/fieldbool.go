@@ -25,29 +25,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fieldpasswordCmd represents the fieldtext command
-var fieldpasswordCmd = &cobra.Command{
-	Use:   "password",
-	Short: "adds a password field to an entity",
-	Long: `Adds a password field to an entity where you can set if the field is --required 
-and define the maximum length. Length=-1 means no restriction
+// fieldboolCmd represents the fieldtext command
+var fieldboolCmd = &cobra.Command{
+	Use:   "boolean",
+	Short: "adds a boolean field to an entity",
+	Long: `Adds a boolean (true/false) field to an entity.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldPassword()
+		addFieldBool()
 	},
 }
 
 func init() {
-	addCmd.AddCommand(fieldpasswordCmd)
-	fieldpasswordCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
-	fieldpasswordCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
-	fieldpasswordCmd.Flags().IntVarP(&length, "length", "l", -1, "Maximum text length (-1 .. means no restriction)")
-	fieldpasswordCmd.MarkFlagRequired("name")
-	fieldpasswordCmd.MarkFlagRequired("entity")
-	fieldpasswordCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
+	addCmd.AddCommand(fieldboolCmd)
+	fieldboolCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
+	fieldboolCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
+	fieldboolCmd.MarkFlagRequired("name")
+	fieldboolCmd.MarkFlagRequired("entity")
 }
 
-func addFieldPassword() {
+func addFieldBool() {
 	var a ast.Application
 
 	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
@@ -55,7 +52,7 @@ func addFieldPassword() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Password", Required: required, Length: length}
+	f := ast.Field{Name: name, Kind: "Boolean"}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)
@@ -67,5 +64,5 @@ func addFieldPassword() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("New password field '%v' added to entity '%v'\n", name, entity)
+	fmt.Printf("New boolean field '%v' added to entity '%v'\n", name, entity)
 }

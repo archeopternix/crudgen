@@ -27,7 +27,7 @@ import (
 
 // fieldtextCmd represents the fieldtext command
 var fieldtextCmd = &cobra.Command{
-	Use:   "fieldtext",
+	Use:   "text",
 	Short: "adds a text field to an entity",
 	Long: `Adds a text field to an entity where you can set if the field is --required 
 or used as a --label in drop down select boxes and define the maximum length. 

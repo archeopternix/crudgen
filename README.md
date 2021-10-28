@@ -126,16 +126,37 @@ and define the maximum length. Length=-1 means no restriction
           --required        Content for field is required to be accepted (to activate: --required)
 
 
-add emailfield
+### Adding a e-mail field (fieldemail)
+Adds a e-mail field to an entity where you can set if the field is --required 
+and define the maximum length. Length=-1 means no restriction
 
+    Usage:
+      crudgen add fieldemail [flags]
 
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+      -l, --length int      Maximum text length (-1 .. means no restriction) (default -1)
+      -n, --name string     Name of the field
+          --required        Content for field is required to be accepted (to activate: --required)
+
+### Adding a boolean field (fieldboolean)
+Adds a boolean (true/false) field to an entity.
+
+    Usage:
+      crudgen add fieldboolean [flags]
+
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+      -n, --name string     Name of the field
+    
 add integerfield
 
 add numberfield
 
 add lookupfield
 
-add boolfield
 
 
 
