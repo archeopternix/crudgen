@@ -30,13 +30,13 @@ Command line interface
 Basic setup of the AST configuration in the target directory. 
 Configuration files will be created with default data set.
 
-`Usage:`
-`  crudgen init [flags]`
+    Usage:
+      crudgen init [flags]
 
-`Flags:`
-`  -h, --help              help for init`
-`  -n, --name string       Name of the application`
-`      --pkg-name string   Package name of the root package (e.g. github.com/abc)`
+    Flags:
+       -h, --help              help for init
+       -n, --name string       Name of the application
+          --pkg-name string   Package name of the root package (e.g. github.com/abc)
 
 ### add entity
 An entity will be added to the configuration. The default type is a
