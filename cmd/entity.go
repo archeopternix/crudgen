@@ -1,5 +1,7 @@
+// Package cmd is the command line interface to the CRUD Package generator
+
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +18,9 @@ limitations under the License.
 package cmd
 
 import (
+	"crudgen/ast"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +36,6 @@ them to the entity configuration.
 A special entity type is 'lookup' which could populate drop down fields.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		addEntity()
-		fmt.Println("add entity called")
 	},
 }
 
@@ -46,22 +49,29 @@ func init() {
 }
 
 func addEntity() {
-	/*	if app == nil {
-			fmt.Println("ERROR: initialize application first.'")
-			os.Exit(1)
-		}
+	var a ast.Application
 
-		if _, ok := app.Entities[ename]; ok {
-			fmt.Println("ERROR: Entity already exists: '", ename, "'")
-			os.Exit(1)
-		}
-		app.Entities[ename] = ast.Entity{Name: ename, Kind: kind}
+	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
-		err := viper.WriteConfig()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	*/
-	fmt.Println("New entity ", ename, " added to config file ")
+	if len(a.Name) < 1 {
+		fmt.Println("ERROR: initialize application first.'")
+		os.Exit(1)
+	}
+
+	if _, ok := a.Entities[ename]; ok {
+		fmt.Println("ERROR: Entity already exists: '", ename, "'")
+		os.Exit(1)
+	}
+
+	a.Entities[ename] = ast.Entity{Name: ename, Kind: kind}
+
+	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fmt.Println("New entity '", ename, "' added to config file ")
 }

@@ -1,5 +1,7 @@
+// Package cmd is the command line interface to the CRUD Package generator
+
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,12 +40,11 @@ Configuration files will be created with default data set.`,
 }
 
 var name, pkgname string
-var app *ast.Application
 
 const (
 	configpath     = "./config/"
 	configfile     = ".crudgen"
-	definitionfile = "definition.yaml"
+	definitionfile = ".model"
 )
 
 func init() {
@@ -80,15 +81,15 @@ func createConfiguration() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Info: New config file created: ", configpath, configfile)
+	fmt.Println("Info: New config file created: ", configpath+configfile)
 
-	app = ast.NewApplication(name)
-	app.Config.PackageName = pkgname
+	a := ast.NewApplication(name)
+	a.Config.PackageName = pkgname
 
-	if err := app.SaveToYAML(configpath + definitionfile); err != nil {
+	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("Info: New definition file created: ", configpath, definitionfile)
+	fmt.Println("Info: New definition file created: ", configpath+definitionfile)
 
 }
