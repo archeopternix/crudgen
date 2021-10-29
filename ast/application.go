@@ -114,6 +114,39 @@ func (a *Application) AddRelation(rel Relation) error {
 	return nil
 }
 
+// FieldCheckForErrors checks for errors in field definition
+func FieldCheckForErrors(f Field) error {
+
+	if f.IsLabel && (!f.Required) {
+		return fmt.Errorf("Only required fields can be labels")
+	}
+
+	if f.Length < -1 {
+		f.Length = -1
+	}
+
+	switch f.Kind {
+	case "text":
+	case "password":
+	case "integer":
+		if f.Max <= f.Min {
+			return fmt.Errorf("Max value '%v' must be higher than '%v'", f.Max, f.Min)
+		}
+	case "number":
+	case "boolean":
+	case "email":
+	case "tel":
+	case "longtext":
+	case "time":
+		return fmt.Errorf("Not implemented")
+	case "lookup":
+
+	default:
+		return fmt.Errorf("Missing or unknown field type: '%v'", f.Kind)
+	}
+	return nil
+}
+
 // AddFieldToEntity adds fields to entities and performs some sanity checks
 func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	// check if entity exists
@@ -127,32 +160,8 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 		}
 	}
 
-	if field.IsLabel && (!field.Required) {
-		return fmt.Errorf("Only required fields can be labels")
-	}
-
-	if field.Length < -1 {
-		field.Length = -1
-	}
-
-	switch field.Kind {
-	case "text":
-	case "password":
-	case "integer":
-		if field.Max <= field.Min {
-			return fmt.Errorf("Max value '%v' must be higher than '%v'", field.Max, field.Min)
-		}
-	case "number":
-	case "boolean":
-	case "email":
-	case "tel":
-	case "longtext":
-	case "time":
-		return fmt.Errorf("Not implemented")
-	case "lookup":
-
-	default:
-		return fmt.Errorf("Missing or unknown field type: '%v'", field.Kind)
+	if err := FieldCheckForErrors(field); err != nil {
+		return err
 	}
 
 	e := a.Entities[entity]
