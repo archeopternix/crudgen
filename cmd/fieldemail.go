@@ -28,12 +28,16 @@ import (
 // fieldemailCmd represents the fieldtext command
 var fieldemailCmd = &cobra.Command{
 	Use:   "email",
-	Short: "adds a e-mail field to an entity",
+	Short: "e-mail field added to an entity",
 	Long: `Adds a e-mail field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldEmail()
+		f := ast.Field{Name: name, Kind: "email", Required: required, Length: length, Size: size}
+		if err := addField(f); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
@@ -46,27 +50,4 @@ func init() {
 	fieldemailCmd.MarkFlagRequired("name")
 	fieldemailCmd.MarkFlagRequired("entity")
 	fieldemailCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
-}
-
-func addFieldEmail() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	f := ast.Field{Name: name, Kind: "Email", Required: required, Length: length, Size: size}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("New e-mail field '%v' added to entity '%v'\n", name, entity)
 }

@@ -29,13 +29,17 @@ import (
 // fieldtextCmd represents the fieldtext command
 var fieldintegerCmd = &cobra.Command{
 	Use:   "integer",
-	Short: "adds an integer field to an entity",
+	Short: "integer field added to an entity",
 	Long: `Adds an integer field to an entity where you can set the 'min', 'max' value 
 	that is allowed to enter. The standard 'step' between values is 1 (means integer) but this can 
 	be changed by setting the 'step' flag
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldInteger()
+		f := ast.Field{Name: name, Kind: "integer", Step: step, Min: min, Max: max, Length: length, Size: size}
+		if err := addField(f); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
@@ -51,27 +55,4 @@ func init() {
 
 	fieldintegerCmd.MarkFlagRequired("name")
 	fieldintegerCmd.MarkFlagRequired("entity")
-}
-
-func addFieldInteger() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	f := ast.Field{Name: name, Kind: "Integer", Step: step, Min: min, Max: max, Length: length, Size: size}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("New integer field '%v' added to entity '%v'\n", name, entity)
 }

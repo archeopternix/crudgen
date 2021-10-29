@@ -25,50 +25,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fieldtextCmd represents the fieldtext command
+// fieldlongtextCmd represents the fieldlongtext command
 var fieldlongtextCmd = &cobra.Command{
 	Use:   "longtext",
-	Short: "adds a longtext field to an entity",
-	Long: `Adds a longtext field to an entity where you can set if the field is --required 
-or used as a --label in drop down select boxes and define the maximum length. 
-Length=-1 means no restriction
+	Short: "longtext field added to an entity",
+	Long: `Adds a longtext field to an entity where you can set if the 
+field is --required and define the maximum length.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldLongText()
+		f := ast.Field{Name: name, Kind: "longtext", Required: required, Length: length, Size: size, Rows: rows}
+
+		if err := addField(f); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
 func init() {
 	addCmd.AddCommand(fieldlongtextCmd)
-	fieldlongtextCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
-	fieldlongtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
-	fieldlongtextCmd.Flags().IntVarP(&length, "length", "l", -1, "Maximum text length (-1 .. means no restriction)")
-	fieldlongtextCmd.Flags().IntVarP(&size, "columns", "", 80, "Columns for textfield (default = 80)")
-	fieldlongtextCmd.Flags().IntVarP(&rows, "rows", "", 4, "Rows for textfield (default = 4")
+	fieldlongtextCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
+	fieldlongtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+	fieldlongtextCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
+	fieldlongtextCmd.Flags().IntVarP(&size, "columns", "", 80, "columns for textfield")
+	fieldlongtextCmd.Flags().IntVarP(&rows, "rows", "", 4, "rows for textfield")
 	fieldlongtextCmd.MarkFlagRequired("name")
 	fieldlongtextCmd.MarkFlagRequired("entity")
-	fieldlongtextCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
-}
-
-func addFieldLongText() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	f := ast.Field{Name: name, Kind: "Longtext", Required: required, Length: length, Size: size, Rows: rows}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("New longtext field '%v' added to entity '%v'\n", name, entity)
+	fieldlongtextCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
 }

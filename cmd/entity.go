@@ -29,11 +29,10 @@ import (
 var entityCmd = &cobra.Command{
 	Use:   "entity",
 	Short: "adds an entity to the application",
-	Long: `an entity will be added to the configuration. The default type is a
+	Long: `An entity will be added to the configuration. The default type is a
 normal 'entity' that holds fields, it is necessary to create fields and add 
 them to the entity configuration.
-
-A special entity type is 'lookup' which could populate drop down fields.`,
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		addEntity()
 	},
@@ -41,8 +40,8 @@ A special entity type is 'lookup' which could populate drop down fields.`,
 
 func init() {
 	addCmd.AddCommand(entityCmd)
-	entityCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the entity")
-	entityCmd.Flags().StringVarP(&kind, "type", "t", "default", "Type of the entity to be created (default or lookup")
+	entityCmd.Flags().StringVarP(&name, "name", "n", "", "name of the entity")
+	entityCmd.Flags().StringVarP(&kind, "type", "t", "default", "type of the entity to be created")
 	entityCmd.MarkFlagRequired("name")
 }
 
@@ -50,16 +49,16 @@ func addEntity() {
 	var a ast.Application
 
 	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
+		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 	if err := a.AddEntity(ast.Entity{Name: name, Kind: kind}); err != nil {
-		fmt.Println(err)
+		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 
 	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
+		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 

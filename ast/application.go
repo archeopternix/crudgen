@@ -19,6 +19,7 @@ limitations under the License.
 package ast
 
 import (
+	"crudgen/internal"
 	"fmt"
 	"io"
 	"os"
@@ -46,15 +47,36 @@ func NewApplication(name string) *Application {
 	return app
 }
 
+// EntityCheckForErrors checks an entity for errors.
+// 'Name' has to be longer than 3 characters without whitespaces
+// 'Kind' is default or lookup
+func EntityCheckForErrors(e Entity) error {
+	if len(e.Name) < 4 {
+		return fmt.Errorf("Entity needs a unique name (min 3 characters): '%v'", e.Name)
+	}
+
+	if internal.IsLetter(e.Name) {
+		return fmt.Errorf("Entity must contain only letters [a-zA-Z0-9]: '%v'", e.Name)
+	}
+
+	switch e.Kind {
+	case "default":
+	case "lookup":
+
+	default:
+		return fmt.Errorf("Missing or unknown entity type: '%v'", e.Kind)
+	}
+	return nil
+}
+
 // AddEntity adds an new entity to the AST and checks if Entity with this name already exists
 // or name is too short
 func (a *Application) AddEntity(e Entity) error {
-	if len(e.Name) < 4 {
-		return fmt.Errorf("ERROR: Entity needs a unique name (min 3 characters): '%v'", e.Name)
+	if err := EntityCheckForErrors(e); err != nil {
+		return err
 	}
-
 	if _, ok := a.Entities[e.Name]; ok {
-		return fmt.Errorf("ERROR: Entity already exists: '%v'", e.Name)
+		return fmt.Errorf("Entity already exists: '%v'", e.Name)
 	}
 
 	a.Entities[e.Name] = e
@@ -88,20 +110,21 @@ func (a *Application) AddRelation(rel Relation) error {
 	return nil
 }
 
+// AddFieldToEntity adds fields to entities and performs some sanity checks
 func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	// check if entity exists
 	if _, ok := a.Entities[entity]; !ok {
-		return fmt.Errorf("ERROR: Entity does not exist: '%v'", entity)
+		return fmt.Errorf("Entity does not exist: '%v'", entity)
 	}
 
 	for _, val := range a.Entities[entity].Fields {
 		if val.Name == field.Name {
-			return fmt.Errorf("ERROR: Field  '%v' already exists in entity '%v'", field.Name, entity)
+			return fmt.Errorf("Field '%v' already exists in entity '%v'", field.Name, entity)
 		}
 	}
 
 	if field.IsLabel && (!field.Required) {
-		return fmt.Errorf("ERROR: Only required fields can be labels")
+		return fmt.Errorf("Only required fields can be labels")
 	}
 
 	if field.Length < -1 {
@@ -109,22 +132,23 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	}
 
 	switch field.Kind {
-	case "Text":
-	case "Password":
-	case "Integer":
+	case "text":
+	case "password":
+	case "integer":
 		if field.Max <= field.Min {
-			return fmt.Errorf("ERROR: max value '%v' must be higher than '%v'", field.Max, field.Min)
+			return fmt.Errorf("Max value '%v' must be higher than '%v'", field.Max, field.Min)
 		}
-	case "Number":
-	case "Boolean":
-	case "Email":
-	case "Tel":
-	case "Longtext":
-	case "Time":
-	case "Lookup":
+	case "number":
+	case "boolean":
+	case "email":
+	case "tel":
+	case "longtext":
+	case "time":
+		return fmt.Errorf("Not implemented")
+	case "lookup":
 
 	default:
-		return fmt.Errorf("ERROR: Missing or unknown field type: '%v'", field.Kind)
+		return fmt.Errorf("Missing or unknown field type: '%v'", field.Kind)
 	}
 
 	e := a.Entities[entity]

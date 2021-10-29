@@ -35,23 +35,21 @@ Configuration files will be created with default data set.
 
     Flags:
        -h, --help              help for init
-       -n, --name string       Name of the application
-           --pkg-name string   Package name of the root package (e.g. github.com/abc)
+       -n, --name string       name of the application
+           --pkg-name string   package name of the root package (e.g. github.com/abc)
 
 ### Adding an entity
 An entity will be added to the configuration. The default type is a
 normal 'entity' that holds fields, it is necessary to create fields and add 
 them to the entity configuration.
 
-A special entity type is 'lookup' which could populate drop down fields.
-
     Usage:
       crudgen add entity [flags]
 
     Flags:
       -h, --help          help for entity
-      -n, --name string   Name of the entity
-      -t, --type string   Type of the entity to be created (default or lookup (default "default")
+      -n, --name string   name of the entity
+      -t, --type string   type of the entity to be created (default "default")
 
 ### Adding a relation
 The relation will be added to the configuration. You can choose as 
@@ -179,12 +177,17 @@ Adds a number field to an entity. Numbers are any floating point values
       -h, --help            help for fieldtext
       -n, --name string     Name of the field
     
-add lookupfield
+### Adding a lookup field (lookup)
+Adds a lookup field to an entity. The name of the lookupfield needs to 
+be the name of the corresponding entity
 
+    Usage:
+      crudgen add lookup [flags]
 
-
-
-add timefield
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+      -n, --name string     Name of the field
 
 
 ### configure

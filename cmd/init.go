@@ -53,8 +53,8 @@ const (
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the application")
-	initCmd.Flags().StringVar(&pkgname, "pkg-name", "", "Package name of the root package (e.g. github.com/abc)")
+	initCmd.Flags().StringVarP(&name, "name", "n", "", "name of the application")
+	initCmd.Flags().StringVar(&pkgname, "pkg-name", "", "package name of the root package (e.g. github.com/abc)")
 	initCmd.MarkFlagRequired("name")
 	initCmd.MarkFlagRequired("pkg-name")
 }

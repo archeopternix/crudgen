@@ -23,9 +23,14 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 
 	"gopkg.in/yaml.v2"
 )
+
+// IsLetter checks if a string contains only letters
+// IsLetter("Alex")) ; true
+var IsLetter = regexp.MustCompile(`^[a-zA-Z0-9]+$`).MatchString
 
 // DirectoryExistError will bne thrown by CheckMkdir when a directory already exists
 type DirectoryExistError struct {

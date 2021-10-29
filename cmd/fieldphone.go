@@ -28,12 +28,17 @@ import (
 // fieldphoneCmd represents the fieldtext command
 var fieldphoneCmd = &cobra.Command{
 	Use:   "phone",
-	Short: "adds a phone field to an entity",
+	Short: "phone field added to an entity",
 	Long: `Adds a phone field to an entity where you can set if the field is --required 
 and define the maximum length. Length=-1 means no restriction
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldPhonet()
+		f := ast.Field{Name: name, Kind: "phone", Required: required, Length: length, Size: size}
+
+		if err := addField(f); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
@@ -46,27 +51,4 @@ func init() {
 	fieldphoneCmd.MarkFlagRequired("name")
 	fieldphoneCmd.MarkFlagRequired("entity")
 	fieldphoneCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
-}
-
-func addFieldPhonet() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	f := ast.Field{Name: name, Kind: "Phone", Required: required, Length: length, Size: size}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("New phone field '%v' added to entity '%v'\n", name, entity)
 }

@@ -28,11 +28,16 @@ import (
 // fieldtextCmd represents the fieldtext command
 var fieldnumberCmd = &cobra.Command{
 	Use:   "number",
-	Short: "adds a number field to an entity",
+	Short: "number field added to an entity",
 	Long: `Adds a number field to an entity. Numbers are any floating point values
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldNumber()
+		f := ast.Field{Name: name, Kind: "number", Length: length, Size: size}
+
+		if err := addField(f); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
@@ -45,27 +50,4 @@ func init() {
 
 	fieldnumberCmd.MarkFlagRequired("name")
 	fieldnumberCmd.MarkFlagRequired("entity")
-}
-
-func addFieldNumber() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	f := ast.Field{Name: name, Kind: "Number", Length: length, Size: size}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("New number field '%v' added to entity '%v'\n", name, entity)
 }

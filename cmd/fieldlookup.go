@@ -28,12 +28,16 @@ import (
 // fieldlookupCmd represents the fieldlookup command
 var fieldlookupCmd = &cobra.Command{
 	Use:   "lookup",
-	Short: "adds a lookup field to an entity",
+	Short: "lookup field added to an entity",
 	Long: `Adds a lookup field to an entity. The name of the lookupfield needs to 
 be the name of the corresponding entity
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldLookup()
+		f := ast.Field{Name: name, Kind: "lookup"}
+		if err := addField(f); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
@@ -44,27 +48,4 @@ func init() {
 
 	fieldlookupCmd.MarkFlagRequired("name")
 	fieldlookupCmd.MarkFlagRequired("entity")
-}
-
-func addFieldLookup() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	f := ast.Field{Name: name, Kind: "Lookup"}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("New lookup field '%v' added to entity '%v'\n", name, entity)
 }
