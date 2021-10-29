@@ -22,6 +22,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/viper"
+
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +50,7 @@ func init() {
 func addEntity() {
 	var a ast.Application
 
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
+	if err := a.LoadFromYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
@@ -57,7 +59,7 @@ func addEntity() {
 		os.Exit(1)
 	}
 
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
+	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}

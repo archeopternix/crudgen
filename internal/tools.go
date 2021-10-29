@@ -56,7 +56,7 @@ func (r *FileExistError) Error() string {
 }
 
 // CheckMkdir checks and creates a directory with given path when not yet exists
-// when directory exists a DirectoryExistError will be thrown, in cas ea new
+// when directory exists a DirectoryExistError will be thrown, in case a new
 // directory will be created it returns nil
 func CheckMkdir(path string) error {
 	// throw error when directory already exists

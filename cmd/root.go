@@ -82,7 +82,7 @@ func initConfig() {
 func addField(f ast.Field) error {
 	var a ast.Application
 
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
+	if err := a.LoadFromYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		return fmt.Errorf("Error: %v", err)
 	}
 
@@ -90,7 +90,7 @@ func addField(f ast.Field) error {
 		return fmt.Errorf("Error: %v", err)
 	}
 
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
+	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		return fmt.Errorf("Error: %v", err)
 	}
 

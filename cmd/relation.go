@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/viper"
+
 	"github.com/spf13/cobra"
 )
 
@@ -53,7 +55,7 @@ func init() {
 func addRelation() {
 	var a ast.Application
 
-	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
+	if err := a.LoadFromYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -63,7 +65,7 @@ func addRelation() {
 		os.Exit(1)
 	}
 
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
+	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

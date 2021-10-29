@@ -40,12 +40,11 @@ Configuration files will be created with default data set.`,
 }
 
 // Package local variables used to capture commands
-var entity, kind, name, pkgname, source, target, typ string
+var entity, kind, name, pkgname, source, target, typ, cfgpath, modulepath string
 var required, label bool
 var length, size, rows, step, min, max int
 
 const (
-	configpath     = "./config/"
 	configfile     = ".crudgen"
 	definitionfile = ".model"
 )
@@ -54,45 +53,49 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 
 	initCmd.Flags().StringVarP(&name, "name", "n", "", "name of the application")
-	initCmd.Flags().StringVar(&pkgname, "pkg-name", "", "package name of the root package (e.g. github.com/abc)")
+	initCmd.Flags().StringVar(&pkgname, "module-pkg", "https://github.com/archeopternix/crudgen-modules.git", "crudgen modules package in github.com")
+	initCmd.Flags().StringVar(&modulepath, "module-path", "./modules/", "path where the modules are stored")
+	initCmd.Flags().StringVar(&cfgpath, "cfgpath", "./config/", "path to config files")
+
 	initCmd.MarkFlagRequired("name")
-	initCmd.MarkFlagRequired("pkg-name")
 }
 
 func createConfiguration() {
 	// check if file already exists - call init only once
 
-	if internal.FileExist(configpath+configfile) != nil {
+	if internal.FileExist(cfgpath+configfile) != nil {
 		fmt.Println("Error: Init can be executed only once")
 		os.Exit(1)
 	}
 
 	// create a directory when file is not found
 
-	if err := internal.CheckMkdir(configpath); err != nil {
+	if err := internal.CheckMkdir(cfgpath); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
 	// Create Viper config file
+	viper.Set("cfgpath", cfgpath)
 	viper.Set("name", name)
-	viper.Set("pkg-name", pkgname)
+	viper.Set("module-pkg", pkgname)
+	viper.Set("module-path", modulepath)
 	viper.SetConfigType("yaml")
 
-	if err := viper.SafeWriteConfigAs(configpath + configfile); err != nil {
+	if err := viper.SafeWriteConfigAs(cfgpath + configfile); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Info: New config file created: ", configpath+configfile)
+	fmt.Println("Info: New config file created: ", cfgpath+configfile)
 
 	a := ast.NewApplication(name)
 	a.Config.PackageName = pkgname
 
-	if err := a.SaveToYAML(configpath + definitionfile); err != nil {
+	if err := a.SaveToYAML(cfgpath + definitionfile); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("Info: New definition file created: ", configpath+definitionfile)
+	fmt.Println("Info: New definition file created: ", cfgpath+definitionfile)
 
 }
