@@ -39,12 +39,13 @@ and define the maximum length. Length=-1 means no restriction
 
 func init() {
 	addCmd.AddCommand(fieldpasswordCmd)
-	fieldpasswordCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
-	fieldpasswordCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
-	fieldpasswordCmd.Flags().IntVarP(&length, "length", "l", -1, "Maximum text length (-1 .. means no restriction)")
+	fieldpasswordCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
+	fieldpasswordCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+	fieldpasswordCmd.Flags().IntVarP(&length, "length", "l", 20, "maximum text length")
+	fieldpasswordCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
 	fieldpasswordCmd.MarkFlagRequired("name")
 	fieldpasswordCmd.MarkFlagRequired("entity")
-	fieldpasswordCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
+	fieldpasswordCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
 }
 
 func addFieldPassword() {
@@ -55,7 +56,7 @@ func addFieldPassword() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Password", Required: required, Length: length}
+	f := ast.Field{Name: name, Kind: "Password", Required: required, Length: length, Size: size}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)

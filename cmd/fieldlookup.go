@@ -25,30 +25,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fieldemailCmd represents the fieldtext command
-var fieldemailCmd = &cobra.Command{
-	Use:   "email",
-	Short: "adds a e-mail field to an entity",
-	Long: `Adds a e-mail field to an entity where you can set if the field is --required 
-and define the maximum length. Length=-1 means no restriction
+// fieldlookupCmd represents the fieldlookup command
+var fieldlookupCmd = &cobra.Command{
+	Use:   "lookup",
+	Short: "adds a lookup field to an entity",
+	Long: `Adds a lookup field to an entity. The name of the lookupfield needs to 
+be the name of the corresponding entity
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldEmail()
+		addFieldLookup()
 	},
 }
 
 func init() {
-	addCmd.AddCommand(fieldemailCmd)
-	fieldemailCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldemailCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldemailCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
-	fieldemailCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
-	fieldemailCmd.MarkFlagRequired("name")
-	fieldemailCmd.MarkFlagRequired("entity")
-	fieldemailCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	addCmd.AddCommand(fieldlookupCmd)
+	fieldlookupCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field equals the coresponding entity")
+	fieldlookupCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+
+	fieldlookupCmd.MarkFlagRequired("name")
+	fieldlookupCmd.MarkFlagRequired("entity")
 }
 
-func addFieldEmail() {
+func addFieldLookup() {
 	var a ast.Application
 
 	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
@@ -56,7 +54,7 @@ func addFieldEmail() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Email", Required: required, Length: length, Size: size}
+	f := ast.Field{Name: name, Kind: "Lookup"}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)
@@ -68,5 +66,5 @@ func addFieldEmail() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("New e-mail field '%v' added to entity '%v'\n", name, entity)
+	fmt.Printf("New lookup field '%v' added to entity '%v'\n", name, entity)
 }

@@ -96,6 +96,8 @@ and define the maximum length. Length=-1 means no restriction
       -l, --length int      Maximum text length (-1 .. means no restriction) (default -1)
       -n, --name string     Name of the field
           --required        Content for field is required to be accepted (to activate: --required)
+          --columns int     Columns for textfield (default = 80) (default 80)
+          --rows int        Rows for textfield (default = 4 (default 4)
 
 ### Adding a password field (password)
 Adds a password field to an entity where you can set if the field is --required 
@@ -151,10 +153,32 @@ Adds a boolean (true/false) field to an entity.
       -h, --help            help for fieldtext
       -n, --name string     Name of the field
     
-add integerfield
+### Adding an integer field (integer)
+Adds an integer field to an entity where you can set the 'min', 'max' value 
+that is allowed to enter. The standard 'step' between values is 1 (means integer) but this can 
+be changed by setting the 'step' flag
 
-add numberfield
+    Usage:
+      crudgen add integer [flags]
 
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+      -n, --name string     Name of the field
+          --max int         Minimum value for field ((default no maximum (default 9223372036854775807)
+          --min int         Minimum value for field (default no minimum) (default -9223372036854775808)
+          --step int        Step between values (step = 1 for integer) (default 1)
+
+### Adding a number field (number)
+Adds a number field to an entity. Numbers are any floating point values
+    Usage:
+      crudgen add number [flags]
+
+    Flags:
+      -e, --entity string   Entity where the field will be added
+      -h, --help            help for fieldtext
+      -n, --name string     Name of the field
+    
 add lookupfield
 
 

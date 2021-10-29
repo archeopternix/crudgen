@@ -112,6 +112,9 @@ func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	case "Text":
 	case "Password":
 	case "Integer":
+		if field.Max <= field.Min {
+			return fmt.Errorf("ERROR: max value '%v' must be higher than '%v'", field.Max, field.Min)
+		}
 	case "Number":
 	case "Boolean":
 	case "Email":

@@ -39,12 +39,13 @@ and define the maximum length. Length=-1 means no restriction
 
 func init() {
 	addCmd.AddCommand(fieldphoneCmd)
-	fieldphoneCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
-	fieldphoneCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
-	fieldphoneCmd.Flags().IntVarP(&length, "length", "l", -1, "Maximum text length (-1 .. means no restriction)")
+	fieldphoneCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
+	fieldphoneCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+	fieldphoneCmd.Flags().IntVarP(&length, "length", "l", 20, "maximum text length")
+	fieldphoneCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
 	fieldphoneCmd.MarkFlagRequired("name")
 	fieldphoneCmd.MarkFlagRequired("entity")
-	fieldphoneCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
+	fieldphoneCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
 }
 
 func addFieldPhonet() {
@@ -55,7 +56,7 @@ func addFieldPhonet() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Phone", Required: required, Length: length}
+	f := ast.Field{Name: name, Kind: "Phone", Required: required, Length: length, Size: size}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)

@@ -25,30 +25,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fieldemailCmd represents the fieldtext command
-var fieldemailCmd = &cobra.Command{
-	Use:   "email",
-	Short: "adds a e-mail field to an entity",
-	Long: `Adds a e-mail field to an entity where you can set if the field is --required 
-and define the maximum length. Length=-1 means no restriction
+// fieldtextCmd represents the fieldtext command
+var fieldnumberCmd = &cobra.Command{
+	Use:   "number",
+	Short: "adds a number field to an entity",
+	Long: `Adds a number field to an entity. Numbers are any floating point values
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addFieldEmail()
+		addFieldNumber()
 	},
 }
 
 func init() {
-	addCmd.AddCommand(fieldemailCmd)
-	fieldemailCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldemailCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldemailCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
-	fieldemailCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
-	fieldemailCmd.MarkFlagRequired("name")
-	fieldemailCmd.MarkFlagRequired("entity")
-	fieldemailCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	addCmd.AddCommand(fieldnumberCmd)
+	fieldnumberCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
+	fieldnumberCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+	fieldnumberCmd.Flags().IntVarP(&length, "length", "l", 30, "maximum text length")
+	fieldnumberCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
+
+	fieldnumberCmd.MarkFlagRequired("name")
+	fieldnumberCmd.MarkFlagRequired("entity")
 }
 
-func addFieldEmail() {
+func addFieldNumber() {
 	var a ast.Application
 
 	if err := a.LoadFromYAML(configpath + definitionfile); err != nil {
@@ -56,7 +55,7 @@ func addFieldEmail() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Email", Required: required, Length: length, Size: size}
+	f := ast.Field{Name: name, Kind: "Number", Length: length, Size: size}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)
@@ -68,5 +67,5 @@ func addFieldEmail() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("New e-mail field '%v' added to entity '%v'\n", name, entity)
+	fmt.Printf("New number field '%v' added to entity '%v'\n", name, entity)
 }

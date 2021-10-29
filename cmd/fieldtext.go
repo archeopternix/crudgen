@@ -40,13 +40,14 @@ Length=-1 means no restriction
 
 func init() {
 	addCmd.AddCommand(fieldtextCmd)
-	fieldtextCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
-	fieldtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
-	fieldtextCmd.Flags().IntVarP(&length, "length", "l", -1, "Maximum text length (-1 .. means no restriction)")
+	fieldtextCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
+	fieldtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+	fieldtextCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
+	fieldtextCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
 	fieldtextCmd.MarkFlagRequired("name")
 	fieldtextCmd.MarkFlagRequired("entity")
-	fieldtextCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
-	fieldtextCmd.Flags().BoolVarP(&label, "label", "", false, "This field will be used as a label for drop down fields (to activate: --label)")
+	fieldtextCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	fieldtextCmd.Flags().BoolVarP(&label, "label", "", false, "field will be used as a label for drop down fields (to activate: --label)")
 }
 
 func addFieldText() {
@@ -57,7 +58,7 @@ func addFieldText() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Text", Required: required, IsLabel: label, Length: length}
+	f := ast.Field{Name: name, Kind: "Text", Required: required, IsLabel: label, Length: length, Size: size}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)

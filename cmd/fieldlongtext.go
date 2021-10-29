@@ -43,6 +43,8 @@ func init() {
 	fieldlongtextCmd.Flags().StringVarP(&name, "name", "n", "", "Name of the field")
 	fieldlongtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "Entity where the field will be added")
 	fieldlongtextCmd.Flags().IntVarP(&length, "length", "l", -1, "Maximum text length (-1 .. means no restriction)")
+	fieldlongtextCmd.Flags().IntVarP(&size, "columns", "", 80, "Columns for textfield (default = 80)")
+	fieldlongtextCmd.Flags().IntVarP(&rows, "rows", "", 4, "Rows for textfield (default = 4")
 	fieldlongtextCmd.MarkFlagRequired("name")
 	fieldlongtextCmd.MarkFlagRequired("entity")
 	fieldlongtextCmd.Flags().BoolVarP(&required, "required", "", false, "Content for field is required to be accepted (to activate: --required)")
@@ -56,7 +58,7 @@ func addFieldLongText() {
 		os.Exit(1)
 	}
 
-	f := ast.Field{Name: name, Kind: "Longtext", Required: required, Length: length}
+	f := ast.Field{Name: name, Kind: "Longtext", Required: required, Length: length, Size: size, Rows: rows}
 
 	if err := a.AddFieldToEntity(entity, f); err != nil {
 		fmt.Println(err)
