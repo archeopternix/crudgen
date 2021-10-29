@@ -97,7 +97,7 @@ func TestAddRelation(t *testing.T) {
 	}
 }
 
-func TestAddField(t *testing.T) {
+func TestAddTextField(t *testing.T) {
 	a := NewApplication("TestApp")
 
 	// Add a new entity
@@ -116,7 +116,7 @@ func TestAddField(t *testing.T) {
 	}
 
 	// successful
-	if err := a.AddFieldToEntity("Alpha", Field{Name: "Textfield", Kind: "Text"}); err != nil {
+	if err := a.AddFieldToEntity("Alpha", Field{Name: "Textfield", Kind: "text"}); err != nil {
 		t.Errorf("Creation of Field 'Textfield' failed: %v", err)
 	}
 }

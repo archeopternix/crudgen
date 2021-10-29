@@ -55,7 +55,7 @@ func EntityCheckForErrors(e Entity) error {
 		return fmt.Errorf("Entity needs a unique name (min 3 characters): '%v'", e.Name)
 	}
 
-	if internal.IsLetter(e.Name) {
+	if !internal.IsLetter(e.Name) {
 		return fmt.Errorf("Entity must contain only letters [a-zA-Z0-9]: '%v'", e.Name)
 	}
 
@@ -72,6 +72,10 @@ func EntityCheckForErrors(e Entity) error {
 // AddEntity adds an new entity to the AST and checks if Entity with this name already exists
 // or name is too short
 func (a *Application) AddEntity(e Entity) error {
+	if e.Kind == "" {
+		e.Kind = "default"
+	}
+
 	if err := EntityCheckForErrors(e); err != nil {
 		return err
 	}
