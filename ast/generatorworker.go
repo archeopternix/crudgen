@@ -119,12 +119,14 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 				defer writer.Close()
 				entityStruct := struct {
 					Entity
-					AppName   string
-					TimeStamp string
+					AppName     string
+					TimeStamp   string
+					PackageName string
 				}{
 					entity,
 					gw.app.Name,
 					gw.app.TimeStamp(),
+					gw.app.Config.PackageName,
 				}
 				if err := tmpl.ExecuteTemplate(writer, task.Template, entityStruct); err != nil {
 					return fmt.Errorf("templategenerator %v", err)
