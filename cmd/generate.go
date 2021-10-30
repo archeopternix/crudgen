@@ -41,11 +41,13 @@ func init() {
 }
 
 func cloneModulesRepository() error {
-	internal.CheckMkdir(viper.GetString("module-path"))
-
-	_, err := git.PlainClone(viper.GetString("module-path"), false, &git.CloneOptions{
-		URL:      viper.GetString("module-pkg"),
-		Progress: os.Stdout,
-	})
-	return err
+	if internal.CheckMkdir(viper.GetString("module-path")) == nil {
+		// only when directory is empty
+		_, err := git.PlainClone(viper.GetString("module-path"), false, &git.CloneOptions{
+			URL:      viper.GetString("module-pkg"),
+			Progress: os.Stdout,
+		})
+		return err
+	}
+	return nil
 }

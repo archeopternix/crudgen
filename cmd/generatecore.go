@@ -16,6 +16,8 @@ limitations under the License.
 package cmd
 
 import (
+	"crudgen/ast"
+	"crudgen/internal"
 	"fmt"
 	"os"
 
@@ -48,8 +50,21 @@ func init() {
 }
 
 func generateCore() error {
-	c := NewGenerator()
-	if err := c.AddModule(viper.GetString(""module-path"")+ "application/app.yaml"); err != nil {
-			log.Fatalf("ERROR: %v", err)
-		}
+	gen := internal.NewGenerator()
+
+	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "application/app.yaml"); err != nil {
+		return err
+	}
+
+	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
+	if err != nil {
+		return err
+	}
+
+	gen.Worker = ast.NewGeneratorWorker(a)
+
+	if err := gen.GenerateAll(); err != nil {
+		return err
+	}
+	return nil
 }

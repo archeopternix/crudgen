@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v2"
 )
@@ -36,6 +37,8 @@ type Application struct {
 	Config    struct {
 		PackageName string `yaml:"packagename"`
 		BasePath    string `yaml:"basepath"`
+		DateFormat  string `yaml:"dateformat"`
+		TimeFormat  string `yaml:"timeformat"`
 	}
 }
 
@@ -46,6 +49,31 @@ func NewApplication(name string) *Application {
 	app.Entities = make(map[string]Entity)
 	app.Relations = make(map[string]Relation)
 	return app
+}
+
+// NewFromYAMLFile creates an new Application instance from a YAML file
+func NewFromYAMLFile(filepath string) (*Application, error) {
+	app := new(Application)
+	app.Entities = make(map[string]Entity)
+	app.Relations = make(map[string]Relation)
+
+	file, err := os.Open(filepath)
+	defer file.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := app.YAMLReader(file); err != nil {
+		return nil, err
+	}
+
+	return app, nil
+}
+
+// TimeStamp neede for file generation. Will be added in the header of each file
+// to track the creation date and time of each file
+func (a Application) TimeStamp() string {
+	return time.Now().Format(a.Config.DateFormat + " " + a.Config.TimeFormat)
 }
 
 // EntityCheckForErrors checks an entity for errors.

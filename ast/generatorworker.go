@@ -35,6 +35,12 @@ type GeneratorWorker struct {
 	app Application
 }
 
+func NewGeneratorWorker(a *Application) *GeneratorWorker {
+	g := new(GeneratorWorker)
+	g.app = *a
+	return g
+}
+
 // GenerateModule generates a 'Module' based on the Generator configuration.
 // Currently implemented Modules are:
 //
