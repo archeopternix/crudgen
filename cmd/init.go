@@ -90,7 +90,10 @@ func createConfiguration() {
 	fmt.Println("Info: New config file created: ", cfgpath+configfile)
 
 	a := ast.NewApplication(name)
+	a.Name = name
 	a.Config.PackageName = pkgname
+	a.Config.DateFormat = "02.01.2006"
+	a.Config.TimeFormat = "15:04:05.000"
 
 	if err := a.SaveToYAML(cfgpath + definitionfile); err != nil {
 		fmt.Println(err)

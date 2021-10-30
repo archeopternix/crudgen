@@ -35,8 +35,7 @@ type Application struct {
 	Entities  map[string]Entity   `yaml:"entities"`  //Entity
 	Relations map[string]Relation `yaml:"relations"` //Relation
 	Config    struct {
-		PackageName string `yaml:"packagename"`
-		BasePath    string `yaml:"basepath"`
+		PackageName string `yaml:"packagename"` // just the repo name without the full path
 		DateFormat  string `yaml:"dateformat"`
 		TimeFormat  string `yaml:"timeformat"`
 	}

@@ -63,23 +63,22 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 	}
 
 	// check or create path
-	path := filepath.Join(gw.app.Config.BasePath, task.Target)
-	if err := internal.CheckMkdir(path); err != nil {
+	if err := internal.CheckMkdir(task.Target); err != nil {
 		_, ok := err.(*internal.DirectoryExistError)
 		if ok {
-			log.Printf("directory '%s' already exists\n", path)
+			log.Printf("directory '%s' already exists\n", task.Target)
 		} else {
 			return err
 		}
 	} else {
-		log.Printf("directory '%s' created\n", path)
+		log.Printf("directory '%s' created\n", task.Target)
 	}
 
 	switch task.Kind {
 	case "copy":
 		// copying all files from .Source to .Target
 		for _, src := range task.Source {
-			path := filepath.Join(gw.app.Config.BasePath, task.Target, filepath.Base(src))
+			path := filepath.Join(task.Target, filepath.Base(src))
 			if err := internal.CopyFile(src, path); err != nil {
 				_, ok := err.(*internal.FileExistError)
 				if ok {
@@ -99,7 +98,7 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 		}
 
 		if len(task.Filename) > 0 {
-			file := filepath.Join(gw.app.Config.BasePath, task.Target, strings.ToLower(task.Filename)+task.Fileext)
+			file := filepath.Join(task.Target, strings.ToLower(task.Filename)+task.Fileext)
 			writer, err := os.Create(file)
 			if err != nil {
 				return fmt.Errorf("template generator %v", err)
@@ -112,7 +111,7 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 
 		} else {
 			for _, entity := range gw.app.Entities {
-				file := filepath.Join(gw.app.Config.BasePath, task.Target, strings.ToLower(entity.Name)) + task.Fileext
+				file := filepath.Join(task.Target, strings.ToLower(entity.Name)) + task.Fileext
 				writer, err := os.Create(file)
 				if err != nil {
 					return fmt.Errorf("template generator %v", err)
