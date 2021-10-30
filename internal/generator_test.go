@@ -2,7 +2,6 @@ package internal
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 )
 
@@ -23,7 +22,10 @@ tasks:
 type TestWorker struct {
 }
 
+var count int
+
 func (tw TestWorker) Generate(task *Task) error {
+	count++
 	return nil
 }
 
@@ -42,8 +44,12 @@ func TestGenerator(t *testing.T) {
 	g.Modules[m.Name] = *m
 	g.Worker = TestWorker{}
 
+	count = 0
 	if err := g.GenerateAll(); err != nil {
 		t.Errorf("GenerateAll throws error: %v", err)
+	}
+	if count < 1 {
+		t.Errorf("Testworker not called: %v", count)
 	}
 
 }

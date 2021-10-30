@@ -25,29 +25,47 @@ import (
 
 // generatemodelCmd represents the generatemodel command
 var generatemodelCmd = &cobra.Command{
-	Use:   "generatemodel",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "model",
+	Short: "generates the model structs",
+	Long:  `Generates the model structs.`,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		if err := cloneModulesRepository(); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("generatemodel called")
+		if err := generateModel(); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
 	},
 }
 
 func init() {
 	generateCmd.AddCommand(generatemodelCmd)
 
-	// Here you will define your flags and configuration settings.
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// generatemodelCmd.PersistentFlags().String("foo", "", "A help for foo")
+func generateModel() error {
+	gen := internal.NewGenerator()
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// generatemodelCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "model/models.yaml"); err != nil {
+		return err
+	}
+	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "mockdatabase/mockdatabase.yaml"); err != nil {
+		return err
+	}
+
+	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
+	if err != nil {
+		return err
+	}
+
+	gen.Worker = ast.NewGeneratorWorker(a)
+
+	if err := gen.GenerateAll(); err != nil {
+		return err
+	}
+	return nil
 }

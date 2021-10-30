@@ -11,6 +11,8 @@ entities: {}
 relations: {}
 config:
   packagename: github.com/archeopternix
+  dateformat: ""
+  timeformat: ""
 `
 
 func TestYAMLWriter(t *testing.T) {
