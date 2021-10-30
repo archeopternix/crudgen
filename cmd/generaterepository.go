@@ -48,6 +48,18 @@ var generaterepositoryCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(generaterepositoryCmd)
+	generaterepositoryCmd.Flags().StringVarP(&repo, "repository", "r", "Mock", "selection which repository to choose [Mock, SQL]")
+
+}
+
+type Environment struct {
+	Instance string `yaml:"instance"` // production, development, testing
+	Database string `yaml:"database"` // postgres,mysql...
+	Host     string `yaml:"host"`     // localhost or IP address
+	Port     int    `yaml:"port"`     //5432
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	Dbname   string `yaml:"dbname"`
 }
 
 func generateRepo() error {
@@ -56,8 +68,27 @@ func generateRepo() error {
 	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "databasetest/databasetest.yaml"); err != nil {
 		return err
 	}
-	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "mockdatabase/mockdatabase.yaml"); err != nil {
-		return err
+	if repo == "Mock" {
+		if err := gen.ModuleFromYAML(viper.GetString("module-path") + "mockdatabase/mockdatabase.yaml"); err != nil {
+			return err
+		}
+		fmt.Println("Mock repo installed")
+	}
+	if repo == "SQL" {
+		if err := gen.ModuleFromYAML(viper.GetString("module-path") + "sqldatabase/database.yaml"); err != nil {
+			return err
+		}
+
+		viper.Set("database", Environment{
+			Instance: "DEV",
+			Database: "postgres",
+			Host:     "localhost",
+			Port:     5432,
+			User:     "admin",
+			Password: "****",
+			Dbname:   "my-db"})
+
+		fmt.Println("SQL repo installed")
 	}
 
 	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)

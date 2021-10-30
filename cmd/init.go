@@ -41,7 +41,7 @@ Configuration files will be created with default data set.`,
 }
 
 // Package local variables used to capture commands
-var entity, kind, name, pkgname, source, target, typ, cfgpath, modulepath string
+var entity, kind, name, pkgname, source, target, typ, cfgpath, modulepath, repo string
 var required, label bool
 var length, size, rows, step, min, max int
 
