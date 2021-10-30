@@ -18,9 +18,13 @@ limitations under the License.
 package cmd
 
 import (
+	"crudgen/ast"
+	"crudgen/internal"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // generatemodelCmd represents the generatemodel command
