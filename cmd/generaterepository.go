@@ -27,11 +27,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-// generatemodelCmd represents the generatemodel command
-var generatemodelCmd = &cobra.Command{
-	Use:   "model",
-	Short: "generates the model structs",
-	Long:  `Generates the model structs.`,
+// generaterepositoryCmd represents the generaterepository command
+var generaterepositoryCmd = &cobra.Command{
+	Use:   "repository",
+	Short: "repository for data storage",
+	Long:  `Creates a respository and associated tests.`,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := cloneModulesRepository(); err != nil {
 			fmt.Printf("Error: %v\n", err)
@@ -39,7 +39,7 @@ var generatemodelCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generateModel(); err != nil {
+		if err := generateRepo(); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
@@ -47,14 +47,16 @@ var generatemodelCmd = &cobra.Command{
 }
 
 func init() {
-	generateCmd.AddCommand(generatemodelCmd)
-
+	generateCmd.AddCommand(generaterepositoryCmd)
 }
 
-func generateModel() error {
+func generateRepo() error {
 	gen := internal.NewGenerator()
 
-	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "model/models.yaml"); err != nil {
+	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "databasetest/databasetest.yaml"); err != nil {
+		return err
+	}
+	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "mockdatabase/mockdatabase.yaml"); err != nil {
 		return err
 	}
 
