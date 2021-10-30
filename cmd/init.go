@@ -23,6 +23,7 @@ import (
 	"fmt"
 
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -91,7 +92,12 @@ func createConfiguration() {
 
 	a := ast.NewApplication(name)
 	a.Name = name
-	a.Config.PackageName = pkgname
+	path, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	a.Config.PackageName = filepath.Base(path)
 	a.Config.DateFormat = "02.01.2006"
 	a.Config.TimeFormat = "15:04:05.000"
 

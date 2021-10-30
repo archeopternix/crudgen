@@ -68,5 +68,6 @@ func generateCore() error {
 	if err := gen.GenerateAll(); err != nil {
 		return err
 	}
+
 	return nil
 }
