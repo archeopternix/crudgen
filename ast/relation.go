@@ -22,7 +22,7 @@ package ast
 // When parsed by Application additional fields will be added to the child and parent
 // entities
 type Relation struct {
-	Source string `json:"source"`
-	Target string `json:"target"`
-	Child  string `json:"child"` // "one2many", "many2many"
+	Parent string `json:"parent"`
+	Child  string `json:"child"`
+	Kind   string `json:"kind"` // "one2many", "many2many"
 }

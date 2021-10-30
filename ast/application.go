@@ -119,12 +119,12 @@ func (a *Application) AddEntity(e Entity) error {
 // AddRelation checks if Entities referenced are existing and adds a new Relation
 // to the AST
 func (a *Application) AddRelation(rel Relation) error {
-	if _, ok := a.Entities[rel.Source]; !ok {
-		return fmt.Errorf("ERROR: Source entity does not exists: '%v'", rel.Source)
+	if _, ok := a.Entities[rel.Parent]; !ok {
+		return fmt.Errorf("ERROR: Parent entity does not exists: '%v'", rel.Parent)
 	}
 
-	if _, ok := a.Entities[rel.Target]; !ok {
-		return fmt.Errorf("ERROR: Target entity does not exists: '%v'", rel.Target)
+	if _, ok := a.Entities[rel.Child]; !ok {
+		return fmt.Errorf("ERROR: Target entity does not exists: '%v'", rel.Child)
 	}
 
 	switch rel.Kind {
@@ -134,7 +134,7 @@ func (a *Application) AddRelation(rel Relation) error {
 		return fmt.Errorf("ERROR: Missing or unknown relation type: '%v'", rel.Kind)
 	}
 
-	name := rel.Source + "_" + rel.Target + "_" + rel.Kind
+	name := rel.Parent + "_" + rel.Child + "_" + rel.Kind
 	if _, ok := a.Relations[name]; ok {
 		return fmt.Errorf("ERROR: Relation already exists: '%v'", name)
 	}
@@ -225,6 +225,7 @@ func (a Application) YAMLWriter(w io.Writer) error {
 	return nil
 }
 
+/*
 // LoadFromYAML loads the Application definition from a YAML file
 func (a *Application) LoadFromYAML(filepath string) error {
 	file, err := os.Open(filepath)
@@ -239,6 +240,7 @@ func (a *Application) LoadFromYAML(filepath string) error {
 
 	return nil
 }
+*/
 
 // YAMLReader reads in the YAML bytes from an io.Reader and converts into
 // Application struct

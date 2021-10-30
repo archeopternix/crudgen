@@ -81,17 +81,17 @@ func TestAddRelation(t *testing.T) {
 	}
 
 	// Add a relation with unknown Entities
-	if err := a.AddRelation(Relation{Source: "Beta", Target: "Zeta", Kind: "onetomany"}); err == nil {
+	if err := a.AddRelation(Relation{Parent: "Beta", Child: "Zeta", Kind: "onetomany"}); err == nil {
 		t.Errorf("Unknown targt entity has to fail")
 	}
 
 	// Add a relation with missing relation type
-	if err := a.AddRelation(Relation{Source: "Beta", Target: "Alpha"}); err == nil {
+	if err := a.AddRelation(Relation{Parent: "Beta", Child: "Alpha"}); err == nil {
 		t.Errorf("Entity with unknown relation type has to fail")
 	}
 
 	// Add a relation
-	if err := a.AddRelation(Relation{Source: "Beta", Target: "Alpha", Kind: "onetomany"}); err != nil {
+	if err := a.AddRelation(Relation{Parent: "Beta", Child: "Alpha", Kind: "onetomany"}); err != nil {
 		t.Errorf("Creation of ralation failed: %v", err)
 	}
 	if len(a.Relations) < 1 {
