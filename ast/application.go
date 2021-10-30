@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"gopkg.in/yaml.v2"
@@ -246,5 +247,68 @@ func (a *Application) YAMLReader(r io.Reader) error {
 	if err := dec.Decode(a); err != nil {
 		return fmt.Errorf("YAML stream cannot be decoded: %v ", err)
 	}
+
+	if err := a.parseDependencies(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// parseDependencies parse all entities for lookup fields, add unique ID field
+// and parse relations between entities and therefore adds dedicated fields for
+// parent/child relations and scans for lookups and parent-child relationships
+// and therefore creates necessary additional entities (e.g. lookup entities)
+// or add additional fields (e.g. Id field for every entity)
+func (a *Application) parseDependencies() error {
+	for key, entity := range a.Entities {
+		for i, field := range entity.Fields {
+
+			// search for lookup fields
+			if field.Kind == "lookup" {
+				// if entity exists and is not a lookup throw error
+				if e, ok := a.Entities[strings.ToLower(field.Name)]; ok {
+					if e.Kind != "lookup" {
+						return fmt.Errorf("Entity with name '%s' could not be overwritten with 'lookup'", e.Name)
+					}
+				} else {
+					// create new Entity of kind lookup
+					a.Entities[strings.ToLower(field.Name)] = Entity{
+						Name: field.Name,
+						Kind: "lookup",
+						Fields: []Field{
+							{Name: "text", Required: true, Kind: "text", IsLabel: true},
+							{Name: "order", Kind: "integer"},
+						},
+					}
+				}
+				entity := a.Entities[key]
+				entity.Fields[i].Object = entity.Fields[i].Name
+				entity.Fields[i].Name = entity.Fields[i].Name + "ID"
+				a.Entities[key] = entity
+			}
+		}
+	}
+
+	for key, entity := range a.Entities {
+		// add ID field
+		entity.Fields = append(entity.Fields, Field{Name: "ID", Kind: "integer", Required: true})
+		a.Entities[key] = entity
+	}
+
+	// add fields for relationships between entities
+	for _, relation := range a.Relations {
+		if relation.Kind == "onetomany" {
+			// add child field
+			childentity := a.Entities[strings.ToLower(relation.Child)]
+			childentity.Fields = append(childentity.Fields, Field{Name: relation.Parent + "ID", Kind: "child", Object: relation.Parent})
+			a.Entities[strings.ToLower(relation.Child)] = childentity
+			// add parent field
+			parententity := a.Entities[strings.ToLower(relation.Parent)]
+			parententity.Fields = append(parententity.Fields, Field{Name: relation.Child, Kind: "parent", Object: relation.Child})
+			a.Entities[strings.ToLower(relation.Parent)] = parententity
+
+		}
+	}
+
 	return nil
 }

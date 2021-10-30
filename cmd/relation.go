@@ -33,7 +33,7 @@ var relationCmd = &cobra.Command{
 	Use:   "relation",
 	Short: "adds an entity relation to the application",
 	Long: `The relation will be added to the configuration. You can choose as 
-relation type onetomany. As a flag source and target have to be submitted as 
+relation type onetomany. As a flag source and child entity names have to be submitted as 
 the both entitites that are in a relation to each other`,
 	Run: func(cmd *cobra.Command, args []string) {
 		addRelation()
@@ -45,9 +45,9 @@ func init() {
 	addCmd.AddCommand(relationCmd)
 
 	relationCmd.Flags().StringVarP(&source, "source", "s", "", "Name of the source (e.g. 1..) entity ")
-	relationCmd.Flags().StringVarP(&target, "target", "t", "", "Name of the target (e.g. ..n) entity ")
+	relationCmd.Flags().StringVarP(&target, "child", "c", "", "Name of the child (e.g. ..n) entity ")
 	relationCmd.Flags().StringVar(&kind, "type", "onetomany", "Type of relation (e.g 1..n = onetomany)")
-	relationCmd.MarkFlagRequired("source")
+	relationCmd.MarkFlagRequired("child")
 	relationCmd.MarkFlagRequired("target")
 
 }
@@ -60,7 +60,7 @@ func addRelation() {
 		os.Exit(1)
 	}
 
-	if err := a.AddRelation(ast.Relation{Source: source, Target: target, Kind: kind}); err != nil {
+	if err := a.AddRelation(ast.Relation{Source: source, Child: target, Kind: kind}); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

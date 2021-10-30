@@ -24,5 +24,5 @@ package ast
 type Relation struct {
 	Source string `json:"source"`
 	Target string `json:"target"`
-	Kind   string `json:"kind"` // "one2many", "many2many"
+	Child  string `json:"child"` // "one2many", "many2many"
 }
