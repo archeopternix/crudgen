@@ -59,7 +59,7 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 	pl := pluralize.NewClient()
 	// First we create a FuncMap with which to register the function.
 	funcMap := template.FuncMap{
-		"lowercase": strings.ToLower, "singular": pl.Singular, "plural": pl.Plural, "inc": func(counter int) int { return counter + 1 },
+		"lowercase": strings.ToLower, "singular": pl.Singular, "title": strings.Title, "plural": pl.Plural, "inc": func(counter int) int { return counter + 1 },
 	}
 
 	// check or create path
@@ -119,10 +119,12 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 				defer writer.Close()
 				entityStruct := struct {
 					Entity
-					AppName string
+					AppName   string
+					TimeStamp string
 				}{
 					entity,
 					gw.app.Name,
+					gw.app.TimeStamp(),
 				}
 				if err := tmpl.ExecuteTemplate(writer, task.Template, entityStruct); err != nil {
 					return fmt.Errorf("templategenerator %v", err)
