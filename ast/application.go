@@ -225,7 +225,7 @@ func (a Application) YAMLWriter(w io.Writer) error {
 	return nil
 }
 
-/*
+/* deprecated
 // LoadFromYAML loads the Application definition from a YAML file
 func (a *Application) LoadFromYAML(filepath string) error {
 	file, err := os.Open(filepath)
