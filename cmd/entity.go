@@ -36,7 +36,11 @@ normal 'entity' that holds fields, it is necessary to create fields and add
 them to the entity configuration.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		addEntity()
+		if err := addEntity(); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("New entity '", name, "' added to config file ")
 	},
 }
 
@@ -47,22 +51,18 @@ func init() {
 	entityCmd.MarkFlagRequired("name")
 }
 
-func addEntity() {
-	var a ast.Application
-
-	if err := a.LoadFromYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
+func addEntity() error {
+	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
+	if err != nil {
+		return err
 	}
+
 	if err := a.AddEntity(ast.Entity{Name: name, Kind: kind}); err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 
 	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
+		return err
 	}
-
-	fmt.Println("New entity '", name, "' added to config file ")
+	return nil
 }

@@ -80,9 +80,9 @@ func initConfig() {
 
 // addField adds an new field to the YAML config file
 func addField(f ast.Field) error {
-	var a ast.Application
 
-	if err := a.LoadFromYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
+	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
+	if err != nil {
 		return fmt.Errorf("Error: %v", err)
 	}
 
