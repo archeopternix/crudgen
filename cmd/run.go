@@ -17,6 +17,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -29,20 +31,28 @@ var runCmd = &cobra.Command{
 the main() will be executed. If there is a webserver needed the option flag port 
 could be used - as a default port 8080 is used`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called")
+
+		// initialize or refresh go.mod
+		prg := "go"
+		arg1 := "build"
+
+		command := exec.Command(prg, arg1)
+		if err := command.Run(); err != nil {
+			fmt.Printf("Error in build: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("weberver started. Hit CTRL+C to stop")
+		command = exec.Command("_test.exe")
+		err := command.Run()
+		if err != nil {
+			fmt.Printf("Error in run: %v\n", err)
+			os.Exit(1)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(runCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	runCmd.Flags().Int16("port", 8080, "Port to be used by webserver")
 }

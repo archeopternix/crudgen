@@ -19,8 +19,6 @@ import (
 	"fmt"
 	"os"
 
-	"crudgen/ast"
-
 	"github.com/spf13/cobra"
 
 	//	homedir "github.com/mitchellh/go-homedir"
@@ -76,24 +74,4 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
-}
-
-// addField adds an new field to the YAML config file
-func addField(f ast.Field) error {
-
-	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
-	if err != nil {
-		return fmt.Errorf("Error: %v", err)
-	}
-
-	if err := a.AddFieldToEntity(entity, f); err != nil {
-		return fmt.Errorf("Error: %v", err)
-	}
-
-	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
-		return fmt.Errorf("Error: %v", err)
-	}
-
-	fmt.Printf("New %v field '%v' added to entity '%v'\n", f.Kind, f.Name, entity)
-	return nil
 }

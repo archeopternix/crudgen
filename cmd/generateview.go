@@ -18,14 +18,10 @@ limitations under the License.
 package cmd
 
 import (
-	"crudgen/ast"
-	"crudgen/internal"
 	"fmt"
 	"os"
-	"os/exec"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // generateviewCmd represents the generateview command
@@ -40,7 +36,8 @@ var generateviewCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generateView(); err != nil {
+		modules := []string{"view/view.yaml"}
+		if err := runModuleCreation(modules); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
@@ -49,34 +46,4 @@ var generateviewCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(generateviewCmd)
-}
-
-func generateView() error {
-	gen := internal.NewGenerator()
-
-	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "view/view.yaml"); err != nil {
-		return err
-	}
-
-	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
-	if err != nil {
-		return err
-	}
-
-	gen.Worker = ast.NewGeneratorWorker(a)
-
-	if err := gen.GenerateAll(); err != nil {
-		return err
-	}
-
-	// re-initialize go.mod
-	prg := "go"
-	arg1 := "mod"
-	arg2 := "tidy"
-	cmd := exec.Command(prg, arg1, arg2)
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
-	return nil
 }

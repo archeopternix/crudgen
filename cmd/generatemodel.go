@@ -18,13 +18,10 @@ limitations under the License.
 package cmd
 
 import (
-	"crudgen/ast"
-	"crudgen/internal"
 	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // generatemodelCmd represents the generatemodel command
@@ -39,7 +36,8 @@ var generatemodelCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generateModel(); err != nil {
+		modules := []string{"model/models.yaml"}
+		if err := runModuleCreation(modules); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
@@ -49,24 +47,4 @@ var generatemodelCmd = &cobra.Command{
 func init() {
 	generateCmd.AddCommand(generatemodelCmd)
 
-}
-
-func generateModel() error {
-	gen := internal.NewGenerator()
-
-	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "model/models.yaml"); err != nil {
-		return err
-	}
-
-	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
-	if err != nil {
-		return err
-	}
-
-	gen.Worker = ast.NewGeneratorWorker(a)
-
-	if err := gen.GenerateAll(); err != nil {
-		return err
-	}
-	return nil
 }

@@ -18,14 +18,10 @@ limitations under the License.
 package cmd
 
 import (
-	"crudgen/ast"
-	"crudgen/internal"
 	"fmt"
 	"os"
-	"os/exec"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // generatecoreCmd represents the generatecore command
@@ -40,7 +36,8 @@ var generatecoreCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generateCore(); err != nil {
+		modules := []string{"application/app.yaml"}
+		if err := runModuleCreation(modules); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
@@ -50,38 +47,4 @@ var generatecoreCmd = &cobra.Command{
 func init() {
 	generateCmd.AddCommand(generatecoreCmd)
 
-}
-
-func generateCore() error {
-	gen := internal.NewGenerator()
-
-	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "application/app.yaml"); err != nil {
-		return err
-	}
-
-	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
-	if err != nil {
-		return err
-	}
-
-	gen.Worker = ast.NewGeneratorWorker(a)
-
-	if err := gen.GenerateAll(); err != nil {
-		return err
-	}
-
-	if internal.FileExist("go.mod") == nil {
-		// initialize go.mod
-		prg := "go"
-		arg1 := "mod"
-		arg2 := "init"
-
-		cmd := exec.Command(prg, arg1, arg2)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
-		fmt.Println("go.mod init called")
-	}
-
-	return nil
 }

@@ -18,8 +18,6 @@ limitations under the License.
 package cmd
 
 import (
-	"crudgen/ast"
-	"crudgen/internal"
 	"fmt"
 	"os"
 
@@ -39,44 +37,17 @@ var generaterepositoryCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generateRepo(); err != nil {
-			fmt.Printf("Error: %v\n", err)
-			os.Exit(1)
-		}
-	},
-}
-
-func init() {
-	generateCmd.AddCommand(generaterepositoryCmd)
-	generaterepositoryCmd.Flags().StringVarP(&repo, "repository", "r", "Mock", "selection which repository to choose [Mock, SQL]")
-
-}
-
-type Environment struct {
-	Instance string `yaml:"instance"` // production, development, testing
-	Database string `yaml:"database"` // postgres,mysql...
-	Host     string `yaml:"host"`     // localhost or IP address
-	Port     int    `yaml:"port"`     //5432
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Dbname   string `yaml:"dbname"`
-}
-
-func generateRepo() error {
-	gen := internal.NewGenerator()
-
-	if err := gen.ModuleFromYAML(viper.GetString("module-path") + "databasetest/databasetest.yaml"); err != nil {
-		return err
-	}
-	if repo == "Mock" {
-		if err := gen.ModuleFromYAML(viper.GetString("module-path") + "mockdatabase/mockdatabase.yaml"); err != nil {
-			return err
-		}
-		fmt.Println("Mock repo installed")
-	}
-	if repo == "SQL" {
-		if err := gen.ModuleFromYAML(viper.GetString("module-path") + "sqldatabase/database.yaml"); err != nil {
-			return err
+		var modules []string
+		if repo == "Mock" {
+			modules = []string{
+				"databasetest/databasetest.yaml",
+				"mockdatabase/mockdatabase.yaml",
+			}
+		} else {
+			modules = []string{
+				"databasetest/databasetest.yaml",
+				"sqldatabase/database.yaml.yaml",
+			}
 		}
 
 		viper.Set("database", Environment{
@@ -88,18 +59,15 @@ func generateRepo() error {
 			Password: "****",
 			Dbname:   "my-db"})
 
-		fmt.Println("SQL repo installed")
-	}
+		if err := runModuleCreation(modules); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+	},
+}
 
-	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
-	if err != nil {
-		return err
-	}
+func init() {
+	generateCmd.AddCommand(generaterepositoryCmd)
+	generaterepositoryCmd.Flags().StringVarP(&repo, "repository", "r", "Mock", "selection which repository to choose [Mock, SQL]")
 
-	gen.Worker = ast.NewGeneratorWorker(a)
-
-	if err := gen.GenerateAll(); err != nil {
-		return err
-	}
-	return nil
 }
