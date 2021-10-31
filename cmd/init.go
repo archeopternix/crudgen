@@ -100,6 +100,9 @@ func createConfiguration() {
 	a.Config.PackageName = filepath.Base(path)
 	a.Config.DateFormat = "02.01.2006"
 	a.Config.TimeFormat = "15:04:05.000"
+	a.Config.CurrencySymbol = "€"
+	a.Config.DecimalSeparator = ","
+	a.Config.ThousandSeparator = "."
 
 	if err := a.SaveToYAML(cfgpath + definitionfile); err != nil {
 		fmt.Println(err)
