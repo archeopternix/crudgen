@@ -22,6 +22,7 @@ import (
 	"crudgen/internal"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -67,6 +68,19 @@ func generateCore() error {
 
 	if err := gen.GenerateAll(); err != nil {
 		return err
+	}
+
+	if internal.FileExist("go.mod") == nil {
+		// initialize go.mod
+		prg := "go"
+		arg1 := "mod"
+		arg2 := "init"
+
+		cmd := exec.Command(prg, arg1, arg2)
+		if err := cmd.Run(); err != nil {
+			return err
+		}
+		fmt.Println("go.mod init called")
 	}
 
 	return nil

@@ -22,6 +22,7 @@ import (
 	"crudgen/internal"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -67,5 +68,15 @@ func generateView() error {
 	if err := gen.GenerateAll(); err != nil {
 		return err
 	}
+
+	// re-initialize go.mod
+	prg := "go"
+	arg1 := "mod"
+	arg2 := "tidy"
+	cmd := exec.Command(prg, arg1, arg2)
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
 	return nil
 }
