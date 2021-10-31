@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -34,7 +35,6 @@ var generateallCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-
 		modules := []string{
 			"application/app.yaml",
 			"model/models.yaml",
@@ -47,6 +47,15 @@ var generateallCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		// initialize or refresh go.mod
+		prg := "go"
+		arg1 := "build"
+
+		command := exec.Command(prg, arg1)
+		if err := command.Run(); err != nil {
+			fmt.Printf("Error in build: %v\n", err)
+			os.Exit(1)
+		}
 	},
 }
 
