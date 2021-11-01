@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldboolCmd represents the fieldtext command
@@ -32,8 +33,12 @@ var fieldboolCmd = &cobra.Command{
 	Long: `Adds a boolean (true/false) field to an entity.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "boolean"}
-		if err := addField(f); err != nil {
+		f := ast.Field{
+			Name: viper.GetString("name"),
+			Kind: "boolean",
+		}
+
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -42,8 +47,11 @@ var fieldboolCmd = &cobra.Command{
 
 func init() {
 	addCmd.AddCommand(fieldboolCmd)
-	fieldboolCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldboolCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
+	fieldboolCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldboolCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
 	fieldboolCmd.MarkFlagRequired("name")
 	fieldboolCmd.MarkFlagRequired("entity")
+	viper.BindPFlag("name", fieldboolCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldboolCmd.Flags().Lookup("entity"))
+
 }

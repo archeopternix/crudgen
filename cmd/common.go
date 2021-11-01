@@ -80,14 +80,14 @@ func runModuleCreation(files []string) error {
 }
 
 // addField adds an new field to the YAML config file
-func addField(f ast.Field) error {
+func addField(e string, f ast.Field) error {
 
 	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
 	if err != nil {
 		return fmt.Errorf("Error: %v", err)
 	}
 
-	if err := a.AddFieldToEntity(entity, f); err != nil {
+	if err := a.AddFieldToEntity(e, f); err != nil {
 		return fmt.Errorf("Error: %v", err)
 	}
 
@@ -95,6 +95,6 @@ func addField(f ast.Field) error {
 		return fmt.Errorf("Error: %v", err)
 	}
 
-	fmt.Printf("New %v field '%v' added to entity '%v'\n", f.Kind, f.Name, entity)
+	fmt.Printf("New %v field '%v' added to entity '%v'\n", f.Kind, f.Name, e)
 	return nil
 }

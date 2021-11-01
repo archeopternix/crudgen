@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldlookupCmd represents the fieldlookup command
@@ -33,8 +34,12 @@ var fieldlookupCmd = &cobra.Command{
 be the name of the corresponding entity
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "lookup"}
-		if err := addField(f); err != nil {
+		f := ast.Field{
+			Name: viper.GetString("name"),
+			Kind: "lookup",
+		}
+
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -43,9 +48,11 @@ be the name of the corresponding entity
 
 func init() {
 	addCmd.AddCommand(fieldlookupCmd)
-	fieldlookupCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field equals the coresponding entity")
-	fieldlookupCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-
+	fieldlookupCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldlookupCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
 	fieldlookupCmd.MarkFlagRequired("name")
 	fieldlookupCmd.MarkFlagRequired("entity")
+
+	viper.BindPFlag("name", fieldlookupCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldlookupCmd.Flags().Lookup("entity"))
 }

@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldtextCmd represents the fieldtext command
@@ -32,9 +33,15 @@ var fieldnumberCmd = &cobra.Command{
 	Long: `Adds a number field to an entity. Numbers are any floating point values
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "number", Length: length, Size: size}
+		f := ast.Field{
+			Name:     viper.GetString("name"),
+			Kind:     "number",
+			Required: viper.GetBool("required"),
+			Length:   viper.GetInt("length"),
+			Size:     viper.GetInt("size"),
+		}
 
-		if err := addField(f); err != nil {
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -43,11 +50,15 @@ var fieldnumberCmd = &cobra.Command{
 
 func init() {
 	addCmd.AddCommand(fieldnumberCmd)
-	fieldnumberCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldnumberCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldnumberCmd.Flags().IntVarP(&length, "length", "l", 30, "maximum text length")
-	fieldnumberCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
-
+	fieldnumberCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldnumberCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
+	fieldnumberCmd.Flags().IntP("length", "l", 30, "maximum text length")
+	fieldnumberCmd.Flags().IntP("size", "s", 80, "size of the entry field")
 	fieldnumberCmd.MarkFlagRequired("name")
 	fieldnumberCmd.MarkFlagRequired("entity")
+
+	viper.BindPFlag("name", fieldnumberCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldnumberCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldnumberCmd.Flags().Lookup("length"))
+	viper.BindPFlag("size", fieldnumberCmd.Flags().Lookup("size"))
 }

@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldphoneCmd represents the fieldtext command
@@ -33,9 +34,16 @@ var fieldphoneCmd = &cobra.Command{
 and define the maximum length. Length=-1 means no restriction
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "phone", Required: required, Length: length, Size: size}
+		f := ast.Field{
+			Name:     viper.GetString("name"),
+			Kind:     "tel",
+			Required: viper.GetBool("required"),
+			IsLabel:  viper.GetBool("label"),
+			Length:   viper.GetInt("length"),
+			Size:     viper.GetInt("size"),
+		}
 
-		if err := addField(f); err != nil {
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -44,11 +52,17 @@ and define the maximum length. Length=-1 means no restriction
 
 func init() {
 	addCmd.AddCommand(fieldphoneCmd)
-	fieldphoneCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldphoneCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldphoneCmd.Flags().IntVarP(&length, "length", "l", 20, "maximum text length")
-	fieldphoneCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
+	fieldphoneCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldphoneCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
+	fieldphoneCmd.Flags().IntP("length", "l", 20, "maximum text length")
+	fieldphoneCmd.Flags().IntP("size", "s", 80, "size of the entry field")
 	fieldphoneCmd.MarkFlagRequired("name")
 	fieldphoneCmd.MarkFlagRequired("entity")
-	fieldphoneCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	fieldphoneCmd.Flags().Bool("required", false, "content for field is required to be accepted (to activate: --required)")
+
+	viper.BindPFlag("name", fieldphoneCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldphoneCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldphoneCmd.Flags().Lookup("length"))
+	viper.BindPFlag("size", fieldphoneCmd.Flags().Lookup("size"))
+	viper.BindPFlag("required", fieldphoneCmd.Flags().Lookup("required"))
 }

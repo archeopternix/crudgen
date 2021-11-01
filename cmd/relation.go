@@ -22,9 +22,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/viper"
-
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // relationCmd represents the relation command
@@ -35,34 +34,41 @@ var relationCmd = &cobra.Command{
 relation type onetomany. As a flag parent and child entity names have to be submitted as 
 the both entitites that are in a relation to each other`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := addRelation(); err != nil {
+		r := ast.Relation{
+			Parent: viper.GetString("parent"),
+			Child:  viper.GetString("child"),
+			Kind:   viper.GetString("type"),
+		}
+		if err := addRelation(r); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		fmt.Println("New relation '", source, target, typ, "' added to config file ")
+		fmt.Println("New relation '", r.Parent, r.Child, r.Kind, "' added to config file ")
 	},
 }
 
 func init() {
 	addCmd.AddCommand(relationCmd)
 
-	relationCmd.Flags().StringVarP(&source, "parent", "s", "", "Name of the parent (e.g. 1..) entity ")
-	relationCmd.Flags().StringVarP(&target, "child", "c", "", "Name of the child (e.g. ..n) entity ")
-	relationCmd.Flags().StringVar(&kind, "type", "onetomany", "Type of relation (e.g 1..n = onetomany)")
+	relationCmd.Flags().StringP("parent", "s", "", "Name of the parent (e.g. 1..) entity ")
+	relationCmd.Flags().StringP("child", "c", "", "Name of the child (e.g. ..n) entity ")
+	relationCmd.Flags().String("type", "onetomany", "Type of relation (e.g 1..n = onetomany)")
 	relationCmd.MarkFlagRequired("parent")
 	relationCmd.MarkFlagRequired("child")
 
+	viper.BindPFlag("parent", fieldintegerCmd.Flags().Lookup("parent"))
+	viper.BindPFlag("child", fieldintegerCmd.Flags().Lookup("child"))
+	viper.BindPFlag("type", fieldintegerCmd.Flags().Lookup("type"))
 }
 
-func addRelation() error {
+func addRelation(r ast.Relation) error {
 	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
 	if err != nil {
 		return err
 	}
 
-	if err := a.AddRelation(ast.Relation{Parent: source, Child: target, Kind: kind}); err != nil {
+	if err := a.AddRelation(r); err != nil {
 		return err
-
 	}
 
 	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {

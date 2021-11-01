@@ -24,6 +24,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldtextCmd represents the fieldtext command
@@ -35,8 +36,17 @@ var fieldintegerCmd = &cobra.Command{
 	be changed by setting the 'step' flag
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "integer", Step: step, Min: min, Max: max, Length: length, Size: size}
-		if err := addField(f); err != nil {
+		f := ast.Field{
+			Name:   viper.GetString("name"),
+			Kind:   "integer",
+			Length: viper.GetInt("length"),
+			Size:   viper.GetInt("size"),
+			Step:   viper.GetInt("step"),
+			Min:    viper.GetInt("min"),
+			Max:    viper.GetInt("max"),
+		}
+
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -45,14 +55,22 @@ var fieldintegerCmd = &cobra.Command{
 
 func init() {
 	addCmd.AddCommand(fieldintegerCmd)
-	fieldintegerCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldintegerCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldintegerCmd.Flags().IntVarP(&step, "step", "", 1, "step between values")
-	fieldintegerCmd.Flags().IntVarP(&min, "min", "", math.MinInt, "minimum value for field")
-	fieldintegerCmd.Flags().IntVarP(&max, "max", "", math.MaxInt, "maximum value for field")
-	fieldintegerCmd.Flags().IntVarP(&length, "length", "l", 12, "maximum text length")
-	fieldintegerCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
-
+	fieldintegerCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldintegerCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
+	fieldintegerCmd.Flags().Int("step", 1, "step between values")
+	fieldintegerCmd.Flags().Int("min", math.MinInt, "minimum value for field")
+	fieldintegerCmd.Flags().Int("max", math.MaxInt, "maximum value for field")
+	fieldintegerCmd.Flags().IntP("length", "l", 12, "maximum text length")
+	fieldintegerCmd.Flags().IntP("size", "s", 80, "size of the entry field")
 	fieldintegerCmd.MarkFlagRequired("name")
 	fieldintegerCmd.MarkFlagRequired("entity")
+
+	viper.BindPFlag("name", fieldintegerCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldintegerCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldintegerCmd.Flags().Lookup("length"))
+	viper.BindPFlag("size", fieldintegerCmd.Flags().Lookup("size"))
+	viper.BindPFlag("step", fieldintegerCmd.Flags().Lookup("step"))
+	viper.BindPFlag("min", fieldintegerCmd.Flags().Lookup("min"))
+	viper.BindPFlag("max", fieldintegerCmd.Flags().Lookup("max"))
+
 }

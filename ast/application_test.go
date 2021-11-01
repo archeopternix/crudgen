@@ -148,3 +148,21 @@ func TestAddTextField(t *testing.T) {
 		t.Errorf("Creation of Field 'Textfield' failed: %v", err)
 	}
 }
+
+func TestAddIDField(t *testing.T) {
+	a := NewApplication("TestApp")
+
+	// Add a new entity
+	if err := a.AddEntity(Entity{Name: "Alpha"}); err != nil {
+		t.Errorf("Creation of entity 'Alpha'  failed: %v", err)
+	}
+
+	// successful
+	if err := a.AddFieldToEntity("Alpha", Field{Name: "ID", Kind: "integer"}); err != nil {
+		t.Errorf("Creation of Field 'Integer' failed: %v", err)
+	}
+	// successful
+	if err := a.AddFieldToEntity("Alpha", Field{Name: "ID", Kind: "integer"}); err != nil {
+		t.Errorf("ID field must not created but should not throw any error %v", err)
+	}
+}

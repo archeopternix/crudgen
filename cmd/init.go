@@ -40,58 +40,65 @@ Configuration files will be created with default data set.`,
 	},
 }
 
-// Package local variables used to capture commands
+/* Package local variables used to capture commands
 var entity, kind, name, pkgname, source, target, typ, cfgpath, modulepath, repo string
 var required, label bool
 var length, size, rows, step, min, max int
+*/
 
 const (
-	configfile     = ".crudgen"
 	definitionfile = ".model"
 )
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringVarP(&name, "name", "n", "", "name of the application")
-	initCmd.Flags().StringVar(&pkgname, "module-pkg", "https://github.com/archeopternix/crudgen-modules.git", "crudgen modules package in github.com")
-	initCmd.Flags().StringVar(&modulepath, "module-path", "./modules/", "path where the modules are stored")
-	initCmd.Flags().StringVar(&cfgpath, "cfgpath", "./config/", "path to config files")
-
+	initCmd.Flags().StringP("name", "n", "", "name of the application")
+	initCmd.Flags().String("module-pkg", "https://github.com/archeopternix/crudgen-modules.git", "crudgen modules package in github.com")
+	initCmd.Flags().String("module-path", "./modules/", "path where the modules are stored")
+	initCmd.Flags().String("cfgpath", "./config/", "path to config files")
+	initCmd.Flags().String("cfgfile", ".crudgen", "filename for config files")
 	initCmd.MarkFlagRequired("name")
+
+	viper.BindPFlag("name", fieldintegerCmd.Flags().Lookup("name"))
+	viper.BindPFlag("module-pkg", fieldintegerCmd.Flags().Lookup("module-pkg"))
+	viper.BindPFlag("module-path", fieldintegerCmd.Flags().Lookup("module-path"))
+	viper.BindPFlag("cfgpath", fieldintegerCmd.Flags().Lookup("cfgpath"))
+	viper.BindPFlag("cfgfile", fieldintegerCmd.Flags().Lookup("cfgfile"))
+
 }
 
 func createConfiguration() {
 	// check if file already exists - call init only once
 
-	if internal.FileExist(cfgpath+configfile) != nil {
+	if internal.FileExist(viper.GetString("cfgpath")+viper.GetString("cfgfile")) != nil {
 		fmt.Println("Error: Init can be executed only once")
 		os.Exit(1)
 	}
 
 	// create a directory when file is not found
 
-	if err := internal.CheckMkdir(cfgpath); err != nil {
+	if err := internal.CheckMkdir(viper.GetString("cfgpath")); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
 	// Create Viper config file
-	viper.Set("cfgpath", cfgpath)
-	viper.Set("name", name)
-	viper.Set("module-pkg", pkgname)
-	viper.Set("module-path", modulepath)
+	//	viper.Set("cfgpath", cfgpath)
+	//viper.Set("name", name)
+	//viper.Set("module-pkg", pkgname)
+	//viper.Set("module-path", modulepath)
 	viper.SetConfigType("yaml")
 
-	if err := viper.SafeWriteConfigAs(cfgpath + configfile); err != nil {
+	if err := viper.SafeWriteConfigAs(viper.GetString("cfgpath") + viper.GetString("cfgfile")); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Info: New config file created: ", cfgpath+configfile)
+	fmt.Println("Info: New config file created: ", viper.GetString("cfgpath")+viper.GetString("cfgfile"))
 
-	a := ast.NewApplication(name)
-	a.Name = name
+	a := ast.NewApplication(viper.GetString("name"))
+	a.Name = viper.GetString("name")
 	path, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
@@ -104,10 +111,10 @@ func createConfiguration() {
 	a.Config.DecimalSeparator = ","
 	a.Config.ThousandSeparator = "."
 
-	if err := a.SaveToYAML(cfgpath + definitionfile); err != nil {
+	if err := a.SaveToYAML(viper.GetString("cfgpath") + definitionfile); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("Info: New definition file created: ", cfgpath+definitionfile)
+	fmt.Println("Info: New definition file created: ", viper.GetString("cfgpath")+definitionfile)
 
 }

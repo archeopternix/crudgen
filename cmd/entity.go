@@ -22,9 +22,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/viper"
-
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // entityCmd represents the entity command
@@ -36,28 +35,36 @@ normal 'entity' that holds fields, it is necessary to create fields and add
 them to the entity configuration.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := addEntity(); err != nil {
+		e := ast.Entity{
+			Name: viper.GetString("name"),
+			Kind: viper.GetString("type"),
+		}
+		if err := addEntity(e); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Println("New entity '", name, "' added to config file ")
+		fmt.Println("New entity '", viper.GetString("name"), "' added to config file ")
 	},
 }
 
 func init() {
 	addCmd.AddCommand(entityCmd)
-	entityCmd.Flags().StringVarP(&name, "name", "n", "", "name of the entity")
-	entityCmd.Flags().StringVarP(&kind, "type", "t", "default", "type of the entity to be created")
+	entityCmd.Flags().StringP("name", "n", "", "name of the entity")
+	entityCmd.Flags().StringP("type", "t", "default", "type of the entity to be created")
 	entityCmd.MarkFlagRequired("name")
+
+	viper.BindPFlag("name", entityCmd.Flags().Lookup("name"))
+	viper.BindPFlag("type", entityCmd.Flags().Lookup("type"))
+
 }
 
-func addEntity() error {
+func addEntity(e ast.Entity) error {
 	a, err := ast.NewFromYAMLFile(viper.GetString("cfgpath") + definitionfile)
 	if err != nil {
 		return err
 	}
 
-	if err := a.AddEntity(ast.Entity{Name: name, Kind: kind}); err != nil {
+	if err := a.AddEntity(e); err != nil {
 		return err
 	}
 

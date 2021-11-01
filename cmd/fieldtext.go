@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldtextCmd represents the fieldtext command
@@ -33,9 +34,16 @@ var fieldtextCmd = &cobra.Command{
 or used as a --label in drop down select boxes and define the maximum length. 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "text", Required: required, IsLabel: label, Length: length, Size: size}
+		f := ast.Field{
+			Name:     viper.GetString("name"),
+			Kind:     "text",
+			Required: viper.GetBool("required"),
+			IsLabel:  viper.GetBool("label"),
+			Length:   viper.GetInt("length"),
+			Size:     viper.GetInt("size"),
+		}
 
-		if err := addField(f); err != nil {
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -44,12 +52,19 @@ or used as a --label in drop down select boxes and define the maximum length.
 
 func init() {
 	addCmd.AddCommand(fieldtextCmd)
-	fieldtextCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldtextCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
-	fieldtextCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
+	fieldtextCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldtextCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
 	fieldtextCmd.MarkFlagRequired("name")
 	fieldtextCmd.MarkFlagRequired("entity")
-	fieldtextCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
-	fieldtextCmd.Flags().BoolVarP(&label, "label", "", false, "field will be used as a label for drop down fields (to activate: --label)")
+	fieldtextCmd.Flags().IntP("length", "l", 120, "maximum text length")
+	fieldtextCmd.Flags().IntP("size", "s", 80, "size of the entry field")
+	fieldtextCmd.Flags().Bool("required", false, "content for field is required to be accepted (to activate: --required)")
+	fieldtextCmd.Flags().Bool("label", false, "field will be used as a label for drop down fields (to activate: --label)")
+
+	viper.BindPFlag("name", fieldtextCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldtextCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldtextCmd.Flags().Lookup("length"))
+	viper.BindPFlag("size", fieldtextCmd.Flags().Lookup("size"))
+	viper.BindPFlag("required", fieldtextCmd.Flags().Lookup("required"))
+	viper.BindPFlag("label", fieldtextCmd.Flags().Lookup("label"))
 }

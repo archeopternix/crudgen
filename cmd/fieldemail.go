@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldemailCmd represents the fieldtext command
@@ -33,8 +34,16 @@ var fieldemailCmd = &cobra.Command{
 and define the maximum length. Length=-1 means no restriction
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "email", Required: required, Length: length, Size: size}
-		if err := addField(f); err != nil {
+		f := ast.Field{
+			Name:     viper.GetString("name"),
+			Kind:     "email",
+			Required: viper.GetBool("required"),
+			IsLabel:  viper.GetBool("label"),
+			Length:   viper.GetInt("length"),
+			Size:     viper.GetInt("size"),
+		}
+
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -43,11 +52,19 @@ and define the maximum length. Length=-1 means no restriction
 
 func init() {
 	addCmd.AddCommand(fieldemailCmd)
-	fieldemailCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldemailCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldemailCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
-	fieldemailCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
+	fieldemailCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldemailCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
+	fieldemailCmd.Flags().IntP("length", "l", 120, "maximum text length")
+	fieldemailCmd.Flags().IntP("size", "s", 80, "size of the entry field")
 	fieldemailCmd.MarkFlagRequired("name")
 	fieldemailCmd.MarkFlagRequired("entity")
-	fieldemailCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	fieldemailCmd.Flags().Bool("required", false, "content for field is required to be accepted (to activate: --required)")
+	fieldemailCmd.Flags().Bool("label", false, "field will be used as a label for drop down fields (to activate: --label)")
+
+	viper.BindPFlag("name", fieldemailCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldemailCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldemailCmd.Flags().Lookup("length"))
+	viper.BindPFlag("size", fieldemailCmd.Flags().Lookup("size"))
+	viper.BindPFlag("required", fieldemailCmd.Flags().Lookup("required"))
+	viper.BindPFlag("label", fieldtextCmd.Flags().Lookup("label"))
 }

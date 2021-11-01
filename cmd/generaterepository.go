@@ -38,7 +38,7 @@ var generaterepositoryCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		var modules []string
-		if repo == "Mock" {
+		if viper.GetString("repository") == "Mock" {
 			modules = []string{
 				"databasetest/databasetest.yaml",
 				"mockdatabase/mockdatabase.yaml",
@@ -68,6 +68,7 @@ var generaterepositoryCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(generaterepositoryCmd)
-	generaterepositoryCmd.Flags().StringVarP(&repo, "repository", "r", "Mock", "selection which repository to choose [Mock, SQL]")
+	generaterepositoryCmd.Flags().StringP("repository", "r", "Mock", "selection which repository to choose [Mock, SQL]")
+	viper.BindPFlag("repository", generaterepositoryCmd.Flags().Lookup("repository"))
 
 }

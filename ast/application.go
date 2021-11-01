@@ -84,6 +84,8 @@ func (a *Application) AddEntity(e Entity) error {
 	if e.Kind == "" {
 		e.Kind = "default"
 	}
+	e.Name = strings.ToLower(e.Name)
+	e.Kind = strings.ToLower(e.Kind)
 
 	if err := EntityCheckForErrors(e); err != nil {
 		return err
@@ -99,6 +101,10 @@ func (a *Application) AddEntity(e Entity) error {
 // AddRelation checks if Entities referenced are existing and adds a new Relation
 // to the AST
 func (a *Application) AddRelation(rel Relation) error {
+	rel.Parent = strings.ToLower(rel.Parent)
+	rel.Child = strings.ToLower(rel.Child)
+	rel.Kind = strings.ToLower(rel.Kind)
+
 	if _, ok := a.Entities[rel.Parent]; !ok {
 		return fmt.Errorf("ERROR: Parent entity does not exists: '%v'", rel.Parent)
 	}
@@ -138,7 +144,7 @@ func FieldCheckForErrors(f Field) error {
 	case "text":
 	case "password":
 	case "integer":
-		if f.Max <= f.Min {
+		if f.Max < f.Min {
 			return fmt.Errorf("Max value '%v' must be higher than '%v'", f.Max, f.Min)
 		}
 	case "number":
@@ -169,13 +175,19 @@ func FieldCheckForErrors(f Field) error {
 
 // AddFieldToEntity adds fields to entities and performs some sanity checks
 func (a *Application) AddFieldToEntity(entity string, field Field) error {
+	entity = strings.ToLower(entity)
+	field.Name = strings.ToLower(field.Name)
+	field.Object = strings.ToLower(field.Object)
+	field.Kind = strings.ToLower(field.Kind)
+
 	// check if entity exists
 	if _, ok := a.Entities[entity]; !ok {
 		return fmt.Errorf("Entity does not exist: '%v'", entity)
 	}
 
 	for _, val := range a.Entities[entity].Fields {
-		if val.Name == field.Name {
+		if (val.Name == field.Name) && (field.Name != "ID") {
+			// abort ID field creation without error
 			return fmt.Errorf("Field '%v' already exists in entity '%v'", field.Name, entity)
 		}
 	}
@@ -265,14 +277,14 @@ func (a *Application) parseDependencies() error {
 					}
 				} else {
 					// create new Entity of kind lookup
-					a.Entities[strings.ToLower(field.Name)] = Entity{
+					a.AddEntity(Entity{
 						Name: field.Name,
 						Kind: "lookup",
 						Fields: []Field{
 							{Name: "text", Required: true, Kind: "text", IsLabel: true},
 							{Name: "order", Kind: "integer"},
 						},
-					}
+					})
 				}
 				entity := a.Entities[key]
 				entity.Fields[i].Object = entity.Fields[i].Name
@@ -282,24 +294,30 @@ func (a *Application) parseDependencies() error {
 		}
 	}
 
-	for key, entity := range a.Entities {
+	for key, _ := range a.Entities {
 		// add ID field
-		entity.Fields = append(entity.Fields, Field{Name: "ID", Kind: "integer", Required: true})
-		a.Entities[key] = entity
+		a.AddFieldToEntity(key, Field{
+			Name:     "ID",
+			Kind:     "integer",
+			Required: true,
+		})
 	}
 
 	// add fields for relationships between entities
 	for _, relation := range a.Relations {
 		if relation.Kind == "onetomany" {
 			// add child field
-			childentity := a.Entities[strings.ToLower(relation.Child)]
-			childentity.Fields = append(childentity.Fields, Field{Name: relation.Parent + "ID", Kind: "child", Object: relation.Parent})
-			a.Entities[strings.ToLower(relation.Child)] = childentity
+			a.AddFieldToEntity(strings.ToLower(relation.Child), Field{
+				Name:   relation.Parent + "ID",
+				Kind:   "child",
+				Object: relation.Parent,
+			})
 			// add parent field
-			parententity := a.Entities[strings.ToLower(relation.Parent)]
-			parententity.Fields = append(parententity.Fields, Field{Name: relation.Child, Kind: "parent", Object: relation.Child})
-			a.Entities[strings.ToLower(relation.Parent)] = parententity
-
+			a.AddFieldToEntity(strings.ToLower(relation.Parent), Field{
+				Name:   relation.Child,
+				Kind:   "parent",
+				Object: relation.Child,
+			})
 		}
 	}
 

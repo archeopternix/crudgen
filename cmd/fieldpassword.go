@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldpasswordCmd represents the fieldtext command
@@ -33,8 +34,15 @@ var fieldpasswordCmd = &cobra.Command{
 and define the maximum length. 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "password", Required: required, Length: length, Size: size}
-		if err := addField(f); err != nil {
+		f := ast.Field{
+			Name:     viper.GetString("name"),
+			Kind:     "password",
+			Required: viper.GetBool("required"),
+			Length:   viper.GetInt("length"),
+			Size:     viper.GetInt("size"),
+		}
+
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -43,11 +51,17 @@ and define the maximum length.
 
 func init() {
 	addCmd.AddCommand(fieldpasswordCmd)
-	fieldpasswordCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldpasswordCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldpasswordCmd.Flags().IntVarP(&length, "length", "l", 20, "maximum text length")
-	fieldpasswordCmd.Flags().IntVarP(&size, "size", "s", 80, "size of the entry field")
+	fieldpasswordCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldpasswordCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
+	fieldpasswordCmd.Flags().IntP("length", "l", 20, "maximum text length")
+	fieldpasswordCmd.Flags().IntP("size", "s", 80, "size of the entry field")
 	fieldpasswordCmd.MarkFlagRequired("name")
 	fieldpasswordCmd.MarkFlagRequired("entity")
-	fieldpasswordCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	fieldpasswordCmd.Flags().Bool("required", false, "content for field is required to be accepted (to activate: --required)")
+
+	viper.BindPFlag("name", fieldpasswordCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldpasswordCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldpasswordCmd.Flags().Lookup("length"))
+	viper.BindPFlag("size", fieldpasswordCmd.Flags().Lookup("size"))
+	viper.BindPFlag("required", fieldpasswordCmd.Flags().Lookup("required"))
 }

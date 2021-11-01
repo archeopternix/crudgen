@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // fieldlongtextCmd represents the fieldlongtext command
@@ -33,9 +34,16 @@ var fieldlongtextCmd = &cobra.Command{
 field is --required and define the maximum length.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		f := ast.Field{Name: name, Kind: "longtext", Required: required, Length: length, Size: size, Rows: rows}
+		f := ast.Field{
+			Name:     viper.GetString("name"),
+			Kind:     "longtext",
+			Required: viper.GetBool("required"),
+			Length:   viper.GetInt("length"),
+			Size:     viper.GetInt("columns"),
+			Rows:     viper.GetInt("rows"),
+		}
 
-		if err := addField(f); err != nil {
+		if err := addField(viper.GetString("entity"), f); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -44,12 +52,19 @@ field is --required and define the maximum length.
 
 func init() {
 	addCmd.AddCommand(fieldlongtextCmd)
-	fieldlongtextCmd.Flags().StringVarP(&name, "name", "n", "", "name of the field")
-	fieldlongtextCmd.Flags().StringVarP(&entity, "entity", "e", "", "entity where the field will be added")
-	fieldlongtextCmd.Flags().IntVarP(&length, "length", "l", 120, "maximum text length")
-	fieldlongtextCmd.Flags().IntVarP(&size, "columns", "", 80, "columns for textfield")
-	fieldlongtextCmd.Flags().IntVarP(&rows, "rows", "", 4, "rows for textfield")
+	fieldlongtextCmd.Flags().StringP("name", "n", "", "name of the field")
+	fieldlongtextCmd.Flags().StringP("entity", "e", "", "entity where the field will be added")
+	fieldlongtextCmd.Flags().IntP("length", "l", 120, "maximum text length")
+	fieldlongtextCmd.Flags().Int("columns", 80, "columns for textfield")
+	fieldlongtextCmd.Flags().Int("rows", 4, "rows for textfield")
 	fieldlongtextCmd.MarkFlagRequired("name")
 	fieldlongtextCmd.MarkFlagRequired("entity")
-	fieldlongtextCmd.Flags().BoolVarP(&required, "required", "", false, "content for field is required to be accepted (to activate: --required)")
+	fieldlongtextCmd.Flags().Bool("required", false, "content for field is required to be accepted (to activate: --required)")
+
+	viper.BindPFlag("name", fieldlongtextCmd.Flags().Lookup("name"))
+	viper.BindPFlag("entity", fieldlongtextCmd.Flags().Lookup("entity"))
+	viper.BindPFlag("length", fieldlongtextCmd.Flags().Lookup("length"))
+	viper.BindPFlag("columns", fieldlongtextCmd.Flags().Lookup("columns"))
+	viper.BindPFlag("rows", fieldlongtextCmd.Flags().Lookup("rows"))
+	viper.BindPFlag("required", fieldlongtextCmd.Flags().Lookup("required"))
 }
