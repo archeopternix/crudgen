@@ -17,9 +17,36 @@ limitations under the License.
 */
 package ast
 
+import (
+	"crudgen/internal"
+	"fmt"
+)
+
 // Entity relates to a database table and holds the field definitions
 type Entity struct {
 	Name   string  `yaml:"name"`
 	Fields []Field `yaml:"fields"`
 	Kind   string  `yaml:"type,omitempty"` // 0..default, 1..Lookup 2..Many2Many
+}
+
+// EntityCheckForErrors checks an entity for errors.
+// 'Name' has to be longer than 3 characters without whitespaces
+// 'Kind' is default or lookup
+func EntityCheckForErrors(e Entity) error {
+	if len(e.Name) < 4 {
+		return fmt.Errorf("Entity needs a unique name (min 3 characters): '%v'", e.Name)
+	}
+
+	if !internal.IsLetter(e.Name) {
+		return fmt.Errorf("Entity must contain only letters [a-zA-Z0-9]: '%v'", e.Name)
+	}
+
+	switch e.Kind {
+	case "default":
+	case "lookup":
+
+	default:
+		return fmt.Errorf("Missing or unknown entity type: '%v'", e.Kind)
+	}
+	return nil
 }

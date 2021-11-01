@@ -19,7 +19,6 @@ limitations under the License.
 package ast
 
 import (
-	"crudgen/internal"
 	"fmt"
 	"io"
 	"os"
@@ -73,32 +72,10 @@ func NewFromYAMLFile(filepath string) (*Application, error) {
 	return app, nil
 }
 
-// TimeStamp neede for file generation. Will be added in the header of each file
+// TimeStamp needed for file generation. Will be added in the header of each file
 // to track the creation date and time of each file
 func (a Application) TimeStamp() string {
 	return time.Now().Format(a.Config.DateFormat + " " + a.Config.TimeFormat)
-}
-
-// EntityCheckForErrors checks an entity for errors.
-// 'Name' has to be longer than 3 characters without whitespaces
-// 'Kind' is default or lookup
-func EntityCheckForErrors(e Entity) error {
-	if len(e.Name) < 4 {
-		return fmt.Errorf("Entity needs a unique name (min 3 characters): '%v'", e.Name)
-	}
-
-	if !internal.IsLetter(e.Name) {
-		return fmt.Errorf("Entity must contain only letters [a-zA-Z0-9]: '%v'", e.Name)
-	}
-
-	switch e.Kind {
-	case "default":
-	case "lookup":
-
-	default:
-		return fmt.Errorf("Missing or unknown entity type: '%v'", e.Kind)
-	}
-	return nil
 }
 
 // AddEntity adds an new entity to the AST and checks if Entity with this name already exists
@@ -153,8 +130,8 @@ func FieldCheckForErrors(f Field) error {
 		return fmt.Errorf("Only required fields can be labels")
 	}
 
-	if f.Length < -1 {
-		f.Length = -1
+	if f.Length < 1 {
+		f.Length = 1
 	}
 
 	switch f.Kind {
@@ -165,14 +142,25 @@ func FieldCheckForErrors(f Field) error {
 			return fmt.Errorf("Max value '%v' must be higher than '%v'", f.Max, f.Min)
 		}
 	case "number":
+		if f.IsLabel {
+			return fmt.Errorf("Number cannot be a 'label'")
+		}
 	case "boolean":
+		if f.IsLabel {
+			return fmt.Errorf("Boolean cannot be a 'label'")
+		}
 	case "email":
 	case "tel":
+		if f.IsLabel {
+			return fmt.Errorf("Phone number (tel) cannot be a 'label'")
+		}
 	case "longtext":
 	case "time":
 		return fmt.Errorf("Not implemented")
 	case "lookup":
-
+		if f.IsLabel {
+			return fmt.Errorf("Number cannot be a 'label'")
+		}
 	default:
 		return fmt.Errorf("Missing or unknown field type: '%v'", f.Kind)
 	}

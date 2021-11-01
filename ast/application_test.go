@@ -13,7 +13,23 @@ config:
   packagename: github.com/archeopternix
   dateformat: ""
   timeformat: ""
+  currency_symbol: ""
+  decimal_separator: ""
+  thousand_separator: ""
 `
+
+func TestTimeStamp(t *testing.T) {
+	a := NewApplication("TestApp")
+	a.Config.DateFormat = "02.01.2006"
+	a.Config.TimeFormat = "15:04:05.000"
+	res := a.TimeStamp()
+	if len(res) != 23 {
+		t.Errorf("Timestamp expected to be in format: %v result was: '%s", a.Config.DateFormat+" "+a.Config.TimeFormat, res)
+	} else {
+		t.Logf("Timestamp format: '%s' result '%s", a.Config.DateFormat+" "+a.Config.TimeFormat, res)
+	}
+
+}
 
 func TestYAMLWriter(t *testing.T) {
 	buf := new(bytes.Buffer)
@@ -64,7 +80,12 @@ func TestAddEntity(t *testing.T) {
 
 	// Add entity with too short name
 	if err := a.AddEntity(Entity{Name: "A1"}); err == nil {
-		t.Error("Creation of entity with too short nam must fail")
+		t.Error("Creation of entity with too short name must fail")
+	}
+
+	// Add entity with too short name
+	if err := a.AddEntity(Entity{Name: "A1", Kind: "dinosaur"}); err == nil {
+		t.Error("Creation of entity with unknown kind must fail")
 	}
 }
 
@@ -96,6 +117,11 @@ func TestAddRelation(t *testing.T) {
 	}
 	if len(a.Relations) < 1 {
 		t.Error("Adding Relation failed")
+	}
+
+	// Add the same relation again
+	if err := a.AddRelation(Relation{Parent: "Beta", Child: "Alpha", Kind: "onetomany"}); err == nil {
+		t.Errorf("Duplicate entities must not created")
 	}
 }
 
