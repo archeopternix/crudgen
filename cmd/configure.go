@@ -1,4 +1,6 @@
-/*
+/*Package cmd is the command line interface to the CRUD Package generator
+
+
 Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");

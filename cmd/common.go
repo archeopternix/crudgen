@@ -1,6 +1,6 @@
-// Package cmd is the command line interface to the CRUD Package generator
+/*Package cmd is the command line interface to the CRUD Package generator
 
-/*
+
 Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Environment holds parameters for a SQL database connection
 type Environment struct {
 	Instance string `yaml:"instance"` // production, development, testing
 	Database string `yaml:"database"` // postgres,mysql...
@@ -36,6 +37,8 @@ type Environment struct {
 	Dbname   string `yaml:"dbname"`
 }
 
+// runModuleCreation runs files defined in 'files', reads in module definitions
+// and saves it to into the Application struct
 func runModuleCreation(files []string) error {
 	if len(files) < 1 {
 		return fmt.Errorf("no files to parse are specified: %v", files)

@@ -1,6 +1,6 @@
-// GenerationDSL project main.go
+/*Package internal consists of the full AST (abstract syntax tree) which reflects
+the object structure consisting of Entities, Fields, Relations..
 
-/*
 Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,9 +13,7 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
+limitations under the License. */
 package internal
 
 import (
@@ -73,7 +71,7 @@ func CheckMkdir(path string) error {
 	return nil
 }
 
-// fileExist returns whether the given file exists. Returns nil when file does
+// FileExist returns whether the given file exists. Returns nil when file does
 // not exist, FileExistError when files exist or the error when something went wrong
 func FileExist(fname string) error {
 	_, err := os.Stat(fname)
