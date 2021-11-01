@@ -1,7 +1,7 @@
-// Package ast consists of the full AST (abstract syntax tree) which reflects
-// the object structure consisting of Entities, Fields, Relations..
+/*Package ast consists of the full AST (abstract syntax tree) which reflects
+the object structure consisting of Entities, Fields, Relations..
 
-/*
+
 Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");

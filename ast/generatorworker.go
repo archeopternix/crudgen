@@ -1,7 +1,6 @@
-// Package ast consists of the full AST (abstract syntax tree) which reflects
-// the object structure consisting of Entities, Fields, Relations..
+/*Package ast consists of the full AST (abstract syntax tree) which reflects
+the object structure consisting of Entities, Fields, Relations..
 
-/*
 Copyright © 2021 Andreas<DOC>Eisner <andreas.eisner@kouri.cc>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,13 +34,15 @@ type GeneratorWorker struct {
 	app Application
 }
 
+// NewGeneratorWorker creates an New Generator worker and initializes with and Application
+// which is needed to generate the code
 func NewGeneratorWorker(a *Application) *GeneratorWorker {
 	g := new(GeneratorWorker)
 	g.app = *a
 	return g
 }
 
-// GenerateModule generates a 'Module' based on the Generator configuration.
+// Generate generates a 'Module' based on the Generator configuration.
 // Currently implemented Modules are:
 //
 // kind: copy:
