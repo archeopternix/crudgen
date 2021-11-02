@@ -4,6 +4,39 @@ CRUDgen uses an AST (abstract syntax tree) that is backed up by a configuration 
 You will be provided with an interactive command line interface that helps you building up the 
 model which is the foundation for the code generation.
 
+CRUDgen provides
+* Easy subcommand-based CLIs: crudgen run, crudgen add entity, etc.
+* Fully POSIX-compliant flags (including short & long versions)
+* Nested subcommands
+* Easy generation of applications & commands with cobra init appname & cobra add cmdname
+* Automatic help flag recognition of -h, --help, etc.
+* Pluggable modules stored in a separate repository
+
+
+# Installing
+Using CRUDgen is easy. First, use `go get` to install the latest version
+of the library. This command will install the `crudgen` generator executable
+along with the library and its dependencies:
+
+    go get github.com/archeopternix/crudgen
+    
+    
+
+## Command line interface CLI:
+
+CRUDgen CLI is built on a structure of commands, arguments & flags.
+
+**Commands** represent actions, **Args** are things and **Flags** are modifiers for those actions.
+
+The best applications read like sentences when used, and as a result, users
+intuitively know how to interact with them.
+
+The pattern to follow is
+`crudgen VERB NOUN --ADJECTIVE.`
+    or
+`crudgen COMMAND ARG --FLAG`
+
+
 ## Application
 A full (web based) CRUD application is generated using templates 'go/template'.
 Such an application consists of 4 base components where frontends and backends 
