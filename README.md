@@ -6,7 +6,7 @@ Such an application consists of frontends (view components or API's) and backend
 These modules are organized in a different [CRUDgen modules](https://github.com/archeopternix/crudgen-modules) repository that will be loaded dynamically upon code generation
 It is even possible to write own frontend or backend adapters
 
-CRUDgen uses an [AST](https://github.com/archeopternix/crudgen/ast)  (abstract syntax tree) that is backed up by a configuration files in YAML. 
+CRUDgen uses an [AST](https://github.com/archeopternix/crudgen/tree/main/ast)  (abstract syntax tree) that is backed up by a configuration files in YAML. 
 You will be provided with an interactive command line interface that helps you building up the 
 model which is the foundation for the code generation.
 
