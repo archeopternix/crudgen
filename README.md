@@ -57,11 +57,11 @@ Configuration files will be created with default data set.
            --module-path string   path where the modules are stored (default "./modules/")
            --module-pkg string    crudgen modules package in github.com (default "https://github.com/archeopternix/crudgen-modules.git")
 
-### Add command
+### add command group
 These are the commands that can be utilized to add, relations, entities and fields:
 
     Usage:
-      crudgen add [command]
+      crudgen add [command] [flags]
 
     Available Commands:
       entity      adds an entity to the application
@@ -76,6 +76,33 @@ These are the commands that can be utilized to add, relations, entities and fiel
       password    password field added to an entity
       phone       phone field added to an entity
       text        text field added to an entity
+
+### generate command group
+Generates part or the full application, means there will be all necessary files 
+created (copy or by template execution)
+
+    Usage:
+      crudgen generate [flags]
+      crudgen generate [command]
+
+    Available Commands:
+      all         generates the full application
+      core        generates the core components
+      model       generates the model structs
+      repository  repository for data storage
+      view        view components will be generated
+
+## run
+The application will be generated (generate all) and the main() will be executed. 
+If there is a webserver needed the option flag port could be used.
+
+    Usage:
+      crudgen run [flags]
+
+    Flags:
+      -h, --help         help for run
+          --port int16   Port to be used by webserver (default 8080)
+
 
 ### Adding an entity
 An entity will be added to the configuration. The default type is a
