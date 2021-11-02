@@ -50,9 +50,32 @@ Configuration files will be created with default data set.
       crudgen init [flags]
 
     Flags:
-       -h, --help              help for init
        -n, --name string       name of the application
-           --pkg-name string   package name of the root package (e.g. github.com/abc)
+       -h, --help              help for init
+           --cfgfile string       filename for config files (default ".crudgen")
+           --cfgpath string       path to config files (default "./config/")
+           --module-path string   path where the modules are stored (default "./modules/")
+           --module-pkg string    crudgen modules package in github.com (default "https://github.com/archeopternix/crudgen-modules.git")
+
+### Add command
+These are the commands that can be utilized to add, relations, entities and fields:
+
+    Usage:
+      crudgen add [command]
+
+    Available Commands:
+      entity      adds an entity to the application
+      relation    adds an entity relation to the application
+
+      boolean     boolean field added to an entity
+      email       e-mail field added to an entity
+      integer     integer field added to an entity
+      longtext    longtext field added to an entity
+      lookup      lookup field added to an entity
+      number      number field added to an entity
+      password    password field added to an entity
+      phone       phone field added to an entity
+      text        text field added to an entity
 
 ### Adding an entity
 An entity will be added to the configuration. The default type is a
