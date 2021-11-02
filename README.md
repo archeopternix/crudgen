@@ -1,6 +1,12 @@
 # CRUDgen
 Generator for a web based CRUD application/API with selectable frontends and backends. 
-CRUDgen uses an AST (abstract syntax tree) that is backed up by a configuration files in YAML. 
+
+The arget is to create a full (web based) CRUD application that is generated using templates 'go/template'.
+Such an application consists of frontends (view components or API's) and backends (repositories like MOCK or SQL databases).
+These modules are organized in a different [CRUDgen modules](https://github.com/archeopternix/crudgen-modules) repository that will be loaded dynamically upon code generation
+It is even possible to write own frontend or backend adapters
+
+CRUDgen uses an [AST](https://github.com/archeopternix/crudgen/ast/README.md)  (abstract syntax tree) that is backed up by a configuration files in YAML. 
 You will be provided with an interactive command line interface that helps you building up the 
 model which is the foundation for the code generation.
 
@@ -35,29 +41,6 @@ The pattern to follow is
 `crudgen VERB NOUN --ADJECTIVE.`
     or
 `crudgen COMMAND ARG --FLAG`
-
-
-## Application
-A full (web based) CRUD application is generated using templates 'go/template'.
-Such an application consists of 4 base components where frontends and backends 
-could be easily exchanged. It is even possible to write own frontend or backend adapters
-
-### Core:
-Configuration, interfaces and code that glues the frontend, backend and model together.
-
-### Models:
-crudgen is a generator that uses go/template package to generate models,
-base logic 
-
-### Frontends (could be an API):
-* webpages/routers for echo V4 framework (https://echo.labstack.com/)
-
-### Backends:
-* in-memory databases
-* SQL databases
-
-## Command line interface CLI:
-Command line interface
 
 ### Initialisation
 Basic setup of the AST configuration in the target directory. 
