@@ -29,4 +29,5 @@ Right now these field types are supported:
 ## Relation
 Relation holds the definition for parent - child relationships.
 When parsed by Application additional fields will be added to the child and parent
-entities
+entities:
+    ID unit64 - auto-increment ID field used for relations
