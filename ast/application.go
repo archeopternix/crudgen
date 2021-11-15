@@ -129,50 +129,6 @@ func (a *Application) AddRelation(rel Relation) error {
 	return nil
 }
 
-// FieldCheckForErrors checks for errors in field definition
-func FieldCheckForErrors(f Field) error {
-
-	if f.IsLabel && (!f.Required) {
-		return fmt.Errorf("Only required fields can be labels")
-	}
-
-	if f.Length < 1 {
-		f.Length = 1
-	}
-
-	switch f.Kind {
-	case "text":
-	case "password":
-	case "integer":
-		if f.Max < f.Min {
-			return fmt.Errorf("Max value '%v' must be higher than '%v'", f.Max, f.Min)
-		}
-	case "number":
-		if f.IsLabel {
-			return fmt.Errorf("Number cannot be a 'label'")
-		}
-	case "boolean":
-		if f.IsLabel {
-			return fmt.Errorf("Boolean cannot be a 'label'")
-		}
-	case "email":
-	case "tel":
-		if f.IsLabel {
-			return fmt.Errorf("Phone number (tel) cannot be a 'label'")
-		}
-	case "longtext":
-	case "time":
-		return fmt.Errorf("Not implemented")
-	case "lookup":
-		if f.IsLabel {
-			return fmt.Errorf("Number cannot be a 'label'")
-		}
-	default:
-		return fmt.Errorf("Missing or unknown field type: '%v'", f.Kind)
-	}
-	return nil
-}
-
 // AddFieldToEntity adds fields to entities and performs some sanity checks
 func (a *Application) AddFieldToEntity(entity string, field Field) error {
 	entity = strings.ToLower(entity)

@@ -17,6 +17,11 @@ limitations under the License.
 */
 package ast
 
+import (
+	"crudgen/internal"
+	"fmt"
+)
+
 // Field is the definition for every single attribute within an entity.
 // Object is empty except in case type=lookup or child keeps the name of the Object
 type Field struct {
@@ -33,4 +38,52 @@ type Field struct {
 	Max  int `yaml:"max,omitempty"`  //for Number fields
 
 	Rows int `yaml:"rows,omitempty"` //for textarea
+}
+
+// FieldCheckForErrors checks for errors in field definition
+func FieldCheckForErrors(f Field) error {
+
+	if f.IsLabel && (!f.Required) {
+		return fmt.Errorf("Only required fields can be labels")
+	}
+
+	if len(f.Name) < 2 {
+		return fmt.Errorf("Length of name has to be longer than 2 characters '%v'", f.Name)
+	}
+
+	if !internal.IsLetter(f.Name) {
+		return fmt.Errorf("Name must contain only letters and characters [a-zA-Z0-9]: '%v'", f.Name)
+	}
+
+	switch f.Kind {
+	case "text":
+	case "password":
+	case "integer":
+		if f.Max < f.Min {
+			return fmt.Errorf("Max value '%v' must be higher than '%v'", f.Max, f.Min)
+		}
+	case "number":
+		if f.IsLabel {
+			return fmt.Errorf("Number cannot be a 'label'")
+		}
+	case "boolean":
+		if f.IsLabel {
+			return fmt.Errorf("Boolean cannot be a 'label'")
+		}
+	case "email":
+	case "tel":
+		if f.IsLabel {
+			return fmt.Errorf("Phone number (tel) cannot be a 'label'")
+		}
+	case "longtext":
+	case "time":
+		return fmt.Errorf("Not implemented")
+	case "lookup":
+		if f.IsLabel {
+			return fmt.Errorf("Lookup cannot be a 'label'")
+		}
+	default:
+		return fmt.Errorf("Missing or unknown field type: '%v'", f.Kind)
+	}
+	return nil
 }

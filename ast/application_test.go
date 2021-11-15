@@ -158,7 +158,7 @@ func TestAddIDField(t *testing.T) {
 	}
 
 	// successful
-	if err := a.AddFieldToEntity("Alpha", Field{Name: "ID", Kind: "integer"}); err != nil {
+	if err := a.AddFieldToEntity("Alpha", Field{Name: "counter", Kind: "integer"}); err != nil {
 		t.Errorf("Creation of Field 'Integer' failed: %v", err)
 	}
 	// successful

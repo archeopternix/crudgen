@@ -26,7 +26,7 @@ import (
 type Entity struct {
 	Name   string  `yaml:"name"`
 	Fields []Field `yaml:"fields"`
-	Kind   string  `yaml:"type,omitempty"` // 0..default, 1..Lookup 2..Many2Many
+	Kind   string  `yaml:"type,omitempty"` // 0..default, 1..lookup 2..many2many
 }
 
 // EntityCheckForErrors checks an entity for errors.
