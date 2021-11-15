@@ -42,6 +42,8 @@ The pattern to follow is
     or
 `crudgen COMMAND ARG --FLAG`
 
+## Commands
+
 ### Initialisation
 Basic setup of the AST configuration in the target directory. 
 Configuration files will be created with default data set.
@@ -56,6 +58,17 @@ Configuration files will be created with default data set.
            --cfgpath string       path to config files (default "./config/")
            --module-path string   path where the modules are stored (default "./modules/")
            --module-pkg string    crudgen modules package in github.com (default "https://github.com/archeopternix/crudgen-modules.git")
+
+### run
+The application will be generated (generate all) and the main() will be executed. 
+If there is a webserver needed the option flag port could be used.
+
+    Usage:
+      crudgen run [flags]
+
+    Flags:
+      -h, --help         help for run
+          --port int16   Port to be used by webserver (default 8080)
 
 ### add command group
 These are the commands that can be utilized to add, relations, entities and fields:
@@ -92,17 +105,7 @@ created (copy or by template execution)
       repository  repository for data storage
       view        view components will be generated
 
-### run
-The application will be generated (generate all) and the main() will be executed. 
-If there is a webserver needed the option flag port could be used.
-
-    Usage:
-      crudgen run [flags]
-
-    Flags:
-      -h, --help         help for run
-          --port int16   Port to be used by webserver (default 8080)
-
+## Arguments for add command
 
 ### Adding an entity
 An entity will be added to the configuration. The default type is a
@@ -255,14 +258,5 @@ be the name of the corresponding entity
       -h, --help            help for fieldtext
       -n, --name string     Name of the field
 
-
-### configure
-- configure view / repository -kind/ -help
-
-### generate
-- generate all / model / view / repository
-
-### run
-- run
 
 ## AST tree
