@@ -47,7 +47,7 @@ var length, size, rows, step, min, max int
 */
 
 const (
-	definitionfile = ".model"
+	definitionfile = "model.yaml"
 )
 
 func init() {
@@ -57,14 +57,14 @@ func init() {
 	initCmd.Flags().String("module-pkg", "https://github.com/archeopternix/crudgen-modules.git", "crudgen modules package in github.com")
 	initCmd.Flags().String("module-path", "./modules/", "path where the modules are stored")
 	initCmd.Flags().String("cfgpath", "./config/", "path to config files")
-	initCmd.Flags().String("cfgfile", ".crudgen", "filename for config files")
+	initCmd.Flags().String("cfgfile", "crudgen.yaml", "filename for config files")
 	initCmd.MarkFlagRequired("name")
 
-	viper.BindPFlag("name", fieldintegerCmd.Flags().Lookup("name"))
-	viper.BindPFlag("module-pkg", fieldintegerCmd.Flags().Lookup("module-pkg"))
-	viper.BindPFlag("module-path", fieldintegerCmd.Flags().Lookup("module-path"))
-	viper.BindPFlag("cfgpath", fieldintegerCmd.Flags().Lookup("cfgpath"))
-	viper.BindPFlag("cfgfile", fieldintegerCmd.Flags().Lookup("cfgfile"))
+	viper.BindPFlag("name", initCmd.Flags().Lookup("name"))
+	viper.BindPFlag("module-pkg", initCmd.Flags().Lookup("module-pkg"))
+	viper.BindPFlag("module-path", initCmd.Flags().Lookup("module-path"))
+	viper.BindPFlag("cfgpath", initCmd.Flags().Lookup("cfgpath"))
+	viper.BindPFlag("cfgfile", initCmd.Flags().Lookup("cfgfile"))
 
 }
 
@@ -77,7 +77,7 @@ func createConfiguration() {
 	}
 
 	// create a directory when file is not found
-
+	fmt.Println("PATH: ", viper.GetString("cfgpath"))
 	if err := internal.CheckMkdir(viper.GetString("cfgpath")); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

@@ -66,9 +66,7 @@ func (gw GeneratorWorker) Generate(task *internal.Task) error {
 	// check or create path
 	if err := internal.CheckMkdir(task.Target); err != nil {
 		_, ok := err.(*internal.DirectoryExistError)
-		if ok {
-			log.Printf("directory '%s' already exists\n", task.Target)
-		} else {
+		if !ok {
 			return err
 		}
 	} else {

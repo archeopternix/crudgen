@@ -54,7 +54,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./config/.crudgen)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./config/crudgen.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -62,18 +62,23 @@ func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
+		fmt.Println("config file set to: '", cfgFile, "'")
 	} else {
 
 		// Search config in home directory with name ".crudgen" (without extension).
 		viper.AddConfigPath("./config/")
-		viper.SetConfigName(".crudgen")
+		viper.SetConfigName("crudgen")
 		viper.SetConfigType("yaml")
 	}
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		// fmt.Println("Info: Using config file:", viper.ConfigFileUsed())
-	}
-
+	/*
+		// If a config file is found, read it in.
+		if err := viper.ReadInConfig(); err != nil {
+			fmt.Println("read of config file: :", err)
+			os.Exit(1)
+			// fmt.Println("Info: Using config file:", viper.ConfigFileUsed())
+		}
+	*/
 	viper.AutomaticEnv() // read in environment variables that match
+
 }
