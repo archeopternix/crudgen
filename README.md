@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **ARCHIVED / SUPERSEDED** — This repository is no longer the active implementation. Its responsibilities are replaced by [archeopternix/business-platform](https://github.com/archeopternix/business-platform). Do not start new development here.
+
 # CRUDgen
 Generator for a web based CRUD application/API with selectable frontends and backends. 
 
